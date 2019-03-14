@@ -7,12 +7,14 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Windows.Forms;
+using Starline.SmartNota.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -82,18 +84,29 @@ namespace ACBr.Net.NFSe.Demo
 
         private void btnConsultarLote_Click(object sender, EventArgs e)
         {
-            ExecuteSafe(() =>
+            if (VerificaTextBox(UriEnvio))
+                MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else if (VerificaTextBox(UriEnvio))
+                MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
             {
-                var numero = 10;
-                if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
+                //Busca os arquivos no caminho de servidor
+                var uriEnvio = new UriBuilder(UriEnvio.Text);
+                var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
+                xml.Save(@"C:\TEMP\RPSLOTEENVIO.xml");
 
-                var protocolo = "0";
-                if (InputBox.Show("Numero do Protocolo", "Digite o numero do protocolo.", ref protocolo).Equals(DialogResult.Cancel)) return;
+                var protocolo = BuscaNumeroProtocolo(xml);
+                var numero = BuscaNumeroLote(xml);
 
-                var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
-                wbbDados.LoadXml(ret.XmlEnvio);
-                wbbResposta.LoadXml(ret.XmlRetorno);
-            });
+                ExecuteSafe(() =>
+                {
+                    var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
+                    wbbDados.LoadXml(ret.XmlEnvio);
+                    wbbResposta.LoadXml(ret.XmlRetorno);
+                });
+
+
+            }
         }
 
         private void btnConsultarNFSeRps_Click(object sender, EventArgs e)
@@ -452,15 +465,15 @@ namespace ACBr.Net.NFSe.Demo
             nfSe.Servico.Valores.DescontoIncondicionado = 0;
             nfSe.ValorCredito = 0;
 
-            nfSe.Tomador.CpfCnpj = "44854962283";
+            nfSe.Tomador.CpfCnpj = "";
             nfSe.Tomador.InscricaoMunicipal = "";
-            nfSe.Tomador.RazaoSocial = "Nome";
+            nfSe.Tomador.RazaoSocial = "";
 
             nfSe.Tomador.Endereco.TipoLogradouro = "";
-            nfSe.Tomador.Endereco.Logradouro = "INDEPENDENCIA";
-            nfSe.Tomador.Endereco.Numero = "123";
-            nfSe.Tomador.Endereco.Complemento = "SL 10";
-            nfSe.Tomador.Endereco.Bairro = "VILA SEIXAS";
+            nfSe.Tomador.Endereco.Logradouro = "";
+            nfSe.Tomador.Endereco.Numero = "";
+            nfSe.Tomador.Endereco.Complemento = "";
+            nfSe.Tomador.Endereco.Bairro = "";
             nfSe.Tomador.Endereco.CodigoMunicipio = municipio.Codigo;
             nfSe.Tomador.Endereco.Municipio = municipio.Nome;
             nfSe.Tomador.Endereco.Uf = municipio.UF.ToString();
@@ -509,7 +522,7 @@ namespace ACBr.Net.NFSe.Demo
         {
             ExecuteSafe(() =>
             {
-                var arquivo = Helpers.OpenFile("Arquivo de cidades NFSe (*.nfse) | *.nfse |Todos os arquivos | *.*", "Selecione o arquivo de cidades");
+                var arquivo = Helpers.OpenFile("Arquivo de cidades NFSe (*.nfse)|*.nfse*|Todos os arquivos|*.*", "Selecione o arquivo de cidades");
                 if (arquivo.IsEmpty()) return;
 
                 ProviderManager.Load(arquivo);
@@ -632,6 +645,46 @@ namespace ACBr.Net.NFSe.Demo
             }
         }
 
+        private bool VerificaTextBox(TextBox textBox)
+        {
+            return (textBox.Text == "") ? true : false;
+        }
+
+        private string BuscaNumeroProtocolo(XDocument xml)
+        {
+            var consulta = from p in xml.Root.Elements() select p;
+
+            foreach (var registro in consulta)
+            {
+                if (registro.ToString().IndexOf("Protocolo") > 0)
+                {
+                    return registro.Value;
+                }
+            }
+
+            return String.Empty;
+        }
+
+        private int BuscaNumeroLote(XDocument xml)
+        {
+            var consulta = from p in xml.Root.Elements() select p;
+
+            foreach (var registro in consulta)
+            {
+                int id;
+                if (registro.Attribute("Id") == null)
+                    id = 0;
+                else
+                    id = int.Parse(registro.Attribute("Id").Value);
+
+                return id;
+                
+            }
+
+            return 0;
+        }
+
         #endregion Methods
+
     }
 }

@@ -112,6 +112,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Documents\source\repos\SMARTNOTA.NET\SmartNota\SmartNota.Util\SmartNota.Util.csproj">
+      <Project>{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}</Project>
+      <Name>SmartNota.Util</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ACBr.Net.NFSe\ACBr.Net.NFSe.csproj">
       <Project>{0ef298ca-a045-47e2-91ad-5c211e793c3b}</Project>
       <Name>ACBr.Net.NFSe</Name>

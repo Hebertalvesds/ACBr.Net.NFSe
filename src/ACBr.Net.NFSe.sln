@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.NFSe.Demo", "ACBr.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.NFSe.Proxy", "ACBr.Net.NFSe.Proxy\ACBr.Net.NFSe.Proxy.csproj", "{C18BA390-9433-40E8-9313-B492547ABC99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNota.Util", "..\..\..\..\Documents\source\repos\SMARTNOTA.NET\SmartNota\SmartNota.Util\SmartNota.Util.csproj", "{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ACBr.Net.NFSe.Shared\ACBr.Net.NFSe.Shared.projitems*{0ef298ca-a045-47e2-91ad-5c211e793c3b}*SharedItemsImports = 4
@@ -21,21 +23,43 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Debug|x86.Build.0 = Debug|Any CPU
 		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Release|x86.ActiveCfg = Release|Any CPU
+		{0EF298CA-A045-47E2-91AD-5C211E793C3B}.Release|x86.Build.0 = Release|Any CPU
 		{507A1588-D006-445C-B729-3F1D3A5CE803}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{507A1588-D006-445C-B729-3F1D3A5CE803}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{507A1588-D006-445C-B729-3F1D3A5CE803}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{507A1588-D006-445C-B729-3F1D3A5CE803}.Debug|x86.Build.0 = Debug|Any CPU
 		{507A1588-D006-445C-B729-3F1D3A5CE803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{507A1588-D006-445C-B729-3F1D3A5CE803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{507A1588-D006-445C-B729-3F1D3A5CE803}.Release|x86.ActiveCfg = Release|Any CPU
+		{507A1588-D006-445C-B729-3F1D3A5CE803}.Release|x86.Build.0 = Release|Any CPU
 		{C18BA390-9433-40E8-9313-B492547ABC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C18BA390-9433-40E8-9313-B492547ABC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18BA390-9433-40E8-9313-B492547ABC99}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C18BA390-9433-40E8-9313-B492547ABC99}.Debug|x86.Build.0 = Debug|Any CPU
 		{C18BA390-9433-40E8-9313-B492547ABC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C18BA390-9433-40E8-9313-B492547ABC99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18BA390-9433-40E8-9313-B492547ABC99}.Release|x86.ActiveCfg = Release|Any CPU
+		{C18BA390-9433-40E8-9313-B492547ABC99}.Release|x86.Build.0 = Release|Any CPU
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Debug|x86.ActiveCfg = Debug|x86
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Debug|x86.Build.0 = Debug|x86
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Release|x86.ActiveCfg = Release|x86
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +67,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0EF298CA-A045-47E2-91AD-5C211E793C3B} = {5F2D5256-AC85-4E6F-A8AB-EBA27576D3D2}
 		{C18BA390-9433-40E8-9313-B492547ABC99} = {5F2D5256-AC85-4E6F-A8AB-EBA27576D3D2}
+		{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14} = {5F2D5256-AC85-4E6F-A8AB-EBA27576D3D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {599C9E21-8398-497F-9D1B-2FA3228EA632}

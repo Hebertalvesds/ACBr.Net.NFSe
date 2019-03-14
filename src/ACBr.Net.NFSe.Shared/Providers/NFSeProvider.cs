@@ -50,6 +50,9 @@ namespace ACBr.Net.NFSe.Providers
 
         Ginfes = 5,
 
+        [Description("Ginfes v2")]
+        GinfesV2 = 13,
+
         GovDigital = 6,
 
         [Description("Nota Carioca")]

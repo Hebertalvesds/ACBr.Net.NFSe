@@ -110,6 +110,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Providers\Coplan\SubstituirNFSeRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\Coplan\SubstituirNFSeResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\FissLex\FissLexServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\GinfesV2HomoServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\GinfesV2ProdServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\IGinfesV2HomoService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\IGinfesV2ProdService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\IGinfesV2ServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\GinfesV2\ProviderGinfesV2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\GovDigital\CancelarNFSeRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\GovDigital\CancelarNFSeResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\GovDigital\ConsultarLoteRpsRequest.cs" />
@@ -430,6 +436,7 @@
     <None Include="$(MSBuildThisFileDirectory)Schemas\Betha\xmldsig-core-schema_v01.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)Schemas\Contagem\nfse.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Schemas\Betim\nfse.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Schemas\BHISS\nfse.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Schemas\BHISS\xmldsig-core-schema20020212.xsd" />
@@ -630,6 +637,14 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)Schemas\Friburgo\nfse.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Schemas\Friburgo\xmldsig-core-schema20020212.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_cancelar_nfse_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_consultar_lote_rps_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_consultar_nfse_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_consultar_nfse_rps_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_consultar_situacao_lote_rps_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\servico_enviar_lote_rps_envio_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\tipos_v02.xsd" />
+    <None Include="$(MSBuildThisFileDirectory)Schemas\GinfesV2\xmldsig-core-schema_v02.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Schemas\Ginfes\cabecalho_v03.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -46,6 +46,7 @@ using ACBr.Net.NFSe.Providers.PortoAlegre;
 using ACBr.Net.NFSe.Providers.SaoPaulo;
 using ACBr.Net.NFSe.Providers.WebISS;
 using ACBr.Net.NFSe.Providers.WebISS2;
+using ACBr.Net.NFSe.Providers.GinfesV2;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,7 +80,8 @@ namespace ACBr.Net.NFSe.Providers
                 {NFSeProvider.PortoAlegre, typeof(ProviderPortoAlegre)},
                 {NFSeProvider.SaoPaulo, typeof(ProviderSaoPaulo)},
                 {NFSeProvider.WebIss, typeof(ProviderWebIss)},
-                {NFSeProvider.WebIss2, typeof(ProviderWebIss2)}
+                {NFSeProvider.WebIss2, typeof(ProviderWebIss2)},
+                {NFSeProvider.GinfesV2, typeof(ProviderGinfesV2)}
             };
 
             Load();
