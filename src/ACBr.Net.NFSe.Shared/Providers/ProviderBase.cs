@@ -310,6 +310,11 @@ namespace ACBr.Net.NFSe.Providers
             throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
         }
 
+        public virtual RetornoWebservice Enviar(string lote, NotaFiscalCollection notas)
+        {
+            throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
+        }
+
         /// <summary>
         /// Enviar coleção de Rps para o provedor de forma sincrona.
         /// </summary>
@@ -318,6 +323,11 @@ namespace ACBr.Net.NFSe.Providers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public virtual RetornoWebservice EnviarSincrono(int lote, NotaFiscalCollection notas)
+        {
+            throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
+        }
+
+        public virtual RetornoWebservice EnviarSincrono(string lote, NotaFiscalCollection notas)
         {
             throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
         }
@@ -346,6 +356,12 @@ namespace ACBr.Net.NFSe.Providers
         {
             throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
         }
+
+        public virtual RetornoWebservice ConsultarLoteRps(string lote, string protocolo, NotaFiscalCollection notas)
+        {
+            throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
+        }
+
 
         public virtual RetornoWebservice ConsultarSequencialRps(string serie)
         {

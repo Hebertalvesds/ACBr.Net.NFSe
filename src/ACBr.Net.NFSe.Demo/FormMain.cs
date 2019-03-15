@@ -14,7 +14,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.XPath;
 using System.Xml.Linq;
+using System.Xml;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -55,14 +57,28 @@ namespace ACBr.Net.NFSe.Demo
         {
             ExecuteSafe(() =>
             {
-                GerarRps();
 
-                var numero = 1;
-                if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
+                if (VerificaTextBox(UriEnvio))
+                    MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else if (VerificaTextBox(UriEnvio))
+                    MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                {
+                    //Busca os arquivos no caminho de servidor
+                    var uriEnvio = new UriBuilder(UriEnvio.Text);
+                    var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
+                    xml.Save(@"C:\TEMP\RPSLOTEENVIO.xml");
 
-                var ret = acbrNFSe.Enviar(numero);
-                wbbDados.LoadXml(ret.XmlEnvio);
-                wbbResposta.LoadXml(ret.XmlRetorno);
+                    var numero = BuscaNumeroLote(xml);
+
+                    GerarRps(xml);
+
+                    if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
+
+                    var ret = acbrNFSe.Enviar(numero);
+                    wbbDados.LoadXml(ret.XmlEnvio);
+                    wbbResposta.LoadXml(ret.XmlRetorno);
+                }
             });
         }
 
@@ -425,6 +441,36 @@ namespace ACBr.Net.NFSe.Demo
 
         #endregion Overrides
 
+
+
+
+        private void GerarRps(XDocument xml)
+        {
+            var doc = xml.ToXmlDocument();   
+            var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
+
+            if (municipio == null) return;
+
+            acbrNFSe.NotasFiscais.Clear();
+
+            //Recupera a quantidade de RPS na Raíz Lista Rps
+            var listaRps = doc.DocumentElement.GetElementsByTagName("ListaRps")[0];
+
+            for(int i = 0; i < listaRps.ChildNodes.Count; i++)
+            {
+                
+                if(listaRps.ChildNodes[i].Name.Equals("Rps"))
+                {
+                    var el = XElement.Parse(listaRps.ChildNodes[i].FirstChild.InnerXml);
+
+                    
+                }
+
+            }
+            
+            //Recupera a Raiz
+        }
+
         private void GerarRps()
         {
             var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
@@ -485,7 +531,7 @@ namespace ACBr.Net.NFSe.Demo
             nfSe.Tomador.DadosContato.Telefone = "30111234";
             nfSe.Tomador.DadosContato.Email = "NOME@EMPRESA.COM.BR";
         }
-
+        
         private void AddMunicipio(params ACBrMunicipioNFSe[] municipios)
         {
             ProviderManager.Municipios.AddRange(municipios);
@@ -665,23 +711,23 @@ namespace ACBr.Net.NFSe.Demo
             return String.Empty;
         }
 
-        private int BuscaNumeroLote(XDocument xml)
+        private string BuscaNumeroLote(XDocument xml)
         {
             var consulta = from p in xml.Root.Elements() select p;
 
             foreach (var registro in consulta)
             {
-                int id;
+                string id;
                 if (registro.Attribute("Id") == null)
-                    id = 0;
+                    id = String.Empty;
                 else
-                    id = int.Parse(registro.Attribute("Id").Value);
+                    id = registro.Attribute("Id").Value;
 
                 return id;
                 
             }
 
-            return 0;
+            return String.Empty;
         }
 
         #endregion Methods

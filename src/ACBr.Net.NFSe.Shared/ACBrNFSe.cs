@@ -130,6 +130,43 @@ namespace ACBr.Net.NFSe
             }
         }
 
+        public RetornoWebservice Enviar(string lote, bool sincrono = false, bool imprimir = false)
+
+        {
+            Guard.Against<ACBrException>(NotasFiscais.Count < 1, "ERRO: Nenhuma RPS adicionada ao Lote");
+
+            Guard.Against<ACBrException>(NotasFiscais.Count > 50,
+                $"ERRO: Conjunto de RPS transmitidos (máximo de 50 RPS) excedido.{Environment.NewLine}" +
+                $"Quantidade atual: {NotasFiscais.Count}");
+
+            var oldProtocol = ServicePointManager.SecurityProtocol;
+
+            try
+            {
+                ServicePointManager.SecurityProtocol = protocolType;
+                using (var provider = ProviderManager.GetProvider(Configuracoes))
+                {
+                    var ret = sincrono
+                        ? provider.EnviarSincrono(lote, NotasFiscais)
+                        : provider.Enviar(lote, NotasFiscais);
+
+                    if (ret.Sucesso && DANFSe != null && imprimir)
+                        DANFSe.Imprimir();
+
+                    return ret;
+                }
+            }
+            catch (Exception exception)
+            {
+                this.Log().Error("[Enviar]", exception);
+                throw;
+            }
+            finally
+            {
+                ServicePointManager.SecurityProtocol = oldProtocol;
+            }
+        }
+
         /// <summary>
         /// Consulta a situação do lote de RPS.
         ///
@@ -173,6 +210,29 @@ namespace ACBr.Net.NFSe
         /// <returns>RetornoWebservice.</returns>
         /// <exception cref="NotImplementedException"></exception>
         public RetornoWebservice ConsultarLoteRps(int lote, string protocolo)
+        {
+            var oldProtocol = ServicePointManager.SecurityProtocol;
+
+            try
+            {
+                ServicePointManager.SecurityProtocol = protocolType;
+                using (var provider = ProviderManager.GetProvider(Configuracoes))
+                {
+                    return provider.ConsultarLoteRps(lote, protocolo, NotasFiscais);
+                }
+            }
+            catch (Exception exception)
+            {
+                this.Log().Error("[ConsultarLoteRps]", exception);
+                throw;
+            }
+            finally
+            {
+                ServicePointManager.SecurityProtocol = oldProtocol;
+            }
+        }
+
+        public RetornoWebservice ConsultarLoteRps(string lote, string protocolo)
         {
             var oldProtocol = ServicePointManager.SecurityProtocol;
 

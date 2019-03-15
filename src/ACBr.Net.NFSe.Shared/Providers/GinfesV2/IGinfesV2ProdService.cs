@@ -2,7 +2,7 @@
 
 namespace ACBr.Net.NFSe.Providers.GinfesV2
 {   
-    [ServiceContract(Namespace = "https://producao.ginfes.com.br")]
+    [ServiceContract(Namespace = "http://producao.ginfes.com.br")]
     internal interface IGinfesV2ProdService
     {
         [OperationContract(Action = "", ReplyAction = "*")]
@@ -14,5 +14,6 @@ namespace ACBr.Net.NFSe.Providers.GinfesV2
         [DataContractFormat(Style = OperationFormatStyle.Rpc)]
         [return: MessageParameter(Name = "return")]
         string RecepcionarLoteRps([MessageParameter(Name = "arg0")]string cabecalho, [MessageParameter(Name = "arg1")]string dados);
+
     }
 }

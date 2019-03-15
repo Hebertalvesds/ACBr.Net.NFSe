@@ -455,7 +455,7 @@ namespace ACBr.Net.NFSe.Providers.GinfesV2
 
             var loteBuilder = new StringBuilder();
             loteBuilder.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            loteBuilder.Append("<ConsultarLoteRpsEnvio xmlns:tipos=\"http://www.ginfes.com.br/tipos\" xmlns=\"http://www.ginfes.com.br/servico_consultar_lote_rps_envio\">");
+            loteBuilder.Append("<ConsultarLoteRpsEnvio xmlns:tipos=\"http://www.ginfes.com.br/tipos_v02.xsd\" xmlns=\"http://www.ginfes.com.br/servico_consultar_lote_rps_envio.xsd\">");
             loteBuilder.Append("<Prestador>");
             loteBuilder.Append($"<tipos:Cnpj>{Configuracoes.PrestadorPadrao.CpfCnpj.ZeroFill(14)}</tipos:Cnpj>");
             loteBuilder.Append($"<tipos:InscricaoMunicipal>{Configuracoes.PrestadorPadrao.InscricaoMunicipal}</tipos:InscricaoMunicipal>");
@@ -632,7 +632,7 @@ namespace ACBr.Net.NFSe.Providers.GinfesV2
 
             var xmlDoc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
 
-            XNamespace ns = "http://www.ginfes.com.br/tipos_v02.xsd";
+            XNamespace ns = "http://www.ginfes.com.br/tipos";
             var rps = withPrefix ? new XElement(ns + "Rps", new XAttribute(XNamespace.Xmlns + "tipos", ns)) :
                                    new XElement("Rps", new XAttribute(XNamespace.Xmlns + "tipos", ns));
             xmlDoc.Add(rps);
@@ -802,9 +802,9 @@ namespace ACBr.Net.NFSe.Providers.GinfesV2
         {
             var cabecalho = new StringBuilder();
             cabecalho.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            /*cabecalho.Append("<ns2:cabecalho versao=\"2\" xmlns:ns2=\"http://www.ginfes.com.br/cabecalho_v03.xsd\">");
-            cabecalho.Append("<versaoDados>2</versaoDados>");
-            cabecalho.Append("</ns2:cabecalho>");*/
+            //cabecalho.Append("<ns2:cabecalho versao=\"2\" xmlns:ns2=\"http://www.ginfes.com.br/cabecalho\">");
+            //cabecalho.Append("<versaoDados>2</versaoDados>");
+            //cabecalho.Append("</ns2:cabecalho>");
             return cabecalho.ToString();
         }
 

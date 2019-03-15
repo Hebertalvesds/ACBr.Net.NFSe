@@ -240,6 +240,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Providers\PortoAlegre\RecepcionarLoteRpsResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\PortoAlegre\RequestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\PortoAlegre\ResponseBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\Pronim\IPronimHomoService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\ProviderABRASF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\ProviderABRASF2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\ProviderBase.cs" />
