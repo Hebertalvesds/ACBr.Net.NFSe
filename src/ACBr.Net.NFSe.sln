@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.NFSe.Demo", "ACBr.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.NFSe.Proxy", "ACBr.Net.NFSe.Proxy\ACBr.Net.NFSe.Proxy.csproj", "{C18BA390-9433-40E8-9313-B492547ABC99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNota.Util", "..\..\..\..\Documents\source\repos\SMARTNOTA.NET\SmartNota\SmartNota.Util\SmartNota.Util.csproj", "{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNota.Util", "SmartNota.Util\SmartNota.Util.csproj", "{F4C0BDB1-5ECF-4AC0-B70B-A14D87C92F14}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

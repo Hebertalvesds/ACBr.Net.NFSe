@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Starline.SmartNota.Util.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LogEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LogFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\SmartNFSe_yyMMdd.log</Value>
+    </Setting>
+    <Setting Name="User" Type="System.String" Scope="User">
+      <Value Profile="(Default)">124388</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">124388giss</Value>
+    </Setting>
+    <Setting Name="UrlRequest" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://189.109.86.86/conexaoservicos/financeiro/notafiscalprefeitura/listaxml.asp</Value>
+    </Setting>
+    <Setting Name="UrlResponse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://189.109.86.86/conexaoservicos/financeiro/notafiscalprefeitura/processaxml.asp</Value>
+    </Setting>
+    <Setting Name="SmartNota_Util_NFSe_WS_SJC_PedidoEnvioRPS_PedidoEnvioRPSService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://acessonfe.sjc.issqn.com.br/ws/PedidoEnvioRPS.cfc</Value>
+    </Setting>
+    <Setting Name="SmartNota_Util_NFSe_WS_SJC_PedidoConsultaRPSNumero_PedidoConsultaRPSNumeroService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://acessonfe.sjc.issqn.com.br/ws/PedidoConsultaRPSNumero.cfc</Value>
+    </Setting>
+    <Setting Name="DefaultNamespace" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://acessonfe.sjc.issqn.com.br</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

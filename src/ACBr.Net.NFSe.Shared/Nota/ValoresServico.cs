@@ -69,6 +69,8 @@ namespace ACBr.Net.NFSe.Nota
 
         public SituacaoTributaria IssRetido { get; set; }
 
+        public NFSeSimNao IssRetidoSimNao { get; set; }
+
         public decimal ValorIss { get; set; }
 
         public decimal OutrasRetencoes { get; set; }
