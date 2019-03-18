@@ -25,6 +25,8 @@ namespace ACBr.Net.NFSe.Demo
 
         private ACBrNFSe acbrNFSe;
         private ACBrConfig config;
+        private const bool OBRIGATORIO = true;
+        private const bool NAOOBRIGATORIO = false;
 
         #endregion Fields
 
@@ -42,6 +44,52 @@ namespace ACBr.Net.NFSe.Demo
 
         #region EventHandlers
 
+        private void btnIniciarProc_Click(object sender, EventArgs e)
+        {
+            //Faz a leitura do arquivo de Envio ou Consulta de Lotes e Decide qual processo irá chamar
+            if (VerificaTextBox(UriEnvio))
+                MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else if (VerificaTextBox(UriEnvio))
+                MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+            {
+                var uriEnvio = new UriBuilder(UriEnvio.Text);
+                var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
+
+                var root = xml.Root;
+
+                if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
+                if (root.Name.ToString().Contains("ConsultarLoteRps")) this.EnviarLoteRpsEnvio(xml);
+
+            }
+
+        }
+
+        private void btnFolderConfig_Click(object sender, EventArgs e)
+        {
+            ExecuteSafe(() =>
+            {
+                txtFolderConfig.Text = Helpers.SelectFolder();
+            });
+        }
+
+        private void btnAbreConfig_Click(object sender, EventArgs e)
+        {
+            ExecuteSafe(() =>
+            {
+                var lConfig = "";
+                var path = txtFolderConfig.Text ?? "C:";
+                ExecuteSafe(() =>
+                {
+                    lConfig = Helpers.OpenFile("Arquivo de Configuração (*.config)|*.config*|Todos os arquivos|*.*", path, "Abrir");
+                });
+
+                config = ACBrConfig.CreateOrLoad(lConfig);
+                LoadConfig();
+
+            });
+        }
+
         private void btnSalvarConfig_Click(object sender, EventArgs e)
         {
             //Salva o Arquivo de Configuração Default Sempre
@@ -55,7 +103,7 @@ namespace ACBr.Net.NFSe.Demo
             }
             if (txtConfigName.Text.IsEmpty())
             {
-                MessageBox.Show("Caminho dos Arquivos de configurações na Aba Geral Ausente!", "Erro ao Salvar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nome da Configuração Ausente!", "Erro ao Salvar", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             SaveNewConfig();
@@ -63,28 +111,7 @@ namespace ACBr.Net.NFSe.Demo
 
         private void btnGerarEnviarLoteRps_Click(object sender, EventArgs e)
         {
-            ExecuteSafe(() =>
-            {
-
-                if (VerificaTextBox(UriEnvio))
-                    MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else if (VerificaTextBox(UriEnvio))
-                    MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else
-                {
-                    //Busca os arquivos no caminho de servidor
-                    var uriEnvio = new UriBuilder(UriEnvio.Text);
-                    var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
-                    
-                    var numero = String.Join("", System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xml), @"[^\d]"));
-                    GerarRps(xml);
-                    //if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
-
-                    var ret = acbrNFSe.Enviar(numero);
-                    wbbDados.LoadXml(ret.XmlEnvio);
-                    wbbResposta.LoadXml(ret.XmlRetorno);
-                }
-            });
+            
         }
 
         private void btnConsultarSituacao_Click(object sender, EventArgs e)
@@ -111,20 +138,7 @@ namespace ACBr.Net.NFSe.Demo
                 MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
             {
-                //Busca os arquivos no caminho de servidor
-                var uriEnvio = new UriBuilder(UriEnvio.Text);
-                var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
-                xml.Save(@"C:\TEMP\RPSLOTEENVIO.xml");
-
-                var protocolo = BuscaNumeroProtocolo(xml);
-                var numero = String.Join("",System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xml),@"[^\d]"));
-
-                ExecuteSafe(() =>
-                {
-                    var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
-                    wbbDados.LoadXml(ret.XmlEnvio);
-                    wbbResposta.LoadXml(ret.XmlRetorno);
-                });
+                
 
 
             }
@@ -431,6 +445,80 @@ namespace ACBr.Net.NFSe.Demo
 
         #endregion Overrides
 
+        private string RetornarTagTexto(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
+        {
+            var ret = "";
+            XElement elDefault = new XElement("default","");
+
+            ExecuteSafe(() =>
+            {
+                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
+
+                if (obrigatorio && tag.Value.IsEmpty()) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
+
+                ret = tag.Value;
+
+            });
+
+            return ret;
+        }
+
+        private int RetornarTagInt(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
+        {
+            var ret = 0;
+            XElement elDefault = new XElement("default", 0);
+
+            ExecuteSafe(() =>
+            {
+                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
+                if (obrigatorio && int.Parse(tag.Value) == 0) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
+                ret = int.Parse(tag.Value);
+            });
+
+            return ret;
+        }
+
+        private double RetornarTagDouble(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
+        {
+            var ret = 0.0d;
+            XElement elDefault = new XElement("default", 0);
+
+            ExecuteSafe(() =>
+            {
+                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
+                if (obrigatorio && int.Parse(tag.Value) == 0) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
+                ret = double.Parse(tag.Value);
+            });
+
+            return ret;
+        }
+
+        private string RecuperarCpfOuCnpj(XElement root, XNamespace ns)
+        {
+            string cpfCnpj = String.Empty;
+
+            ExecuteSafe(() =>
+            {
+                cpfCnpj = (!root.Descendants(ns + "Cnpj").IsNull()) ? root.Descendants(ns + "Cnpj").First().Value : root.Descendants(ns + "Cpf").First().Value;
+            });
+
+            return cpfCnpj;
+        }
+
+        private NFSeSimNao RecuperarIncentivoFiscalCultural(XElement root, XNamespace ns)
+        {
+            int incentivador = 2;
+
+            ExecuteSafe(() =>
+            {
+                incentivador = (!root.Descendants(ns + "IncentivoFiscal").IsNull()) ? 
+                int.Parse(root.Descendants(ns + "IncentivoFiscal").First().Value) :
+                int.Parse(root.Descendants(ns + "IncentivadorCultural").First().Value);
+            });
+
+            return (incentivador == 1) ? NFSeSimNao.Sim : NFSeSimNao.Nao;
+        }
+
         private void GerarRps(XDocument xml)
         {
             var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
@@ -441,86 +529,91 @@ namespace ACBr.Net.NFSe.Demo
 
             var ns = xml.Root.GetDefaultNamespace();
             var listaRps = xml.Root.Element(ns + "LoteRps").Element(ns + "ListaRps").Elements(ns + "Rps");
-            foreach (var rps in listaRps)
+
+            ExecuteSafe(() =>
             {
-                var nfse = acbrNFSe.NotasFiscais.AddNew();
-                var rInfo = rps.Element(ns + "InfDeclaracaoPrestacaoServico");
-                var identificacao = rInfo.Element(ns + "Rps").Element(ns + "IdentificacaoRps");
-                var servico = rInfo.Element(ns + "Servico");
-                var valores = servico.Element(ns + "Valores");
-                var prestador = rInfo.Element(ns + "Prestador");
-                var tomador = rInfo.Element(ns + "Tomador");
+                foreach (var rps in listaRps)
+                {
+                    //Recupera a cadeia de informações dos nós principais
+                    var nfse          = acbrNFSe.NotasFiscais.AddNew();
+                    var rInfo         = rps.Element(ns + "InfDeclaracaoPrestacaoServico");
+                    var identificacao = rInfo.Element(ns + "Rps").Element(ns + "IdentificacaoRps");
+                    var servico       = rInfo.Element(ns + "Servico");
+                    var valores       = servico.Element(ns + "Valores");
+                    var prestador     = rInfo.Element(ns + "Prestador");
+                    var tomador       = rInfo.Element(ns + "Tomador");
 
-                nfse.Competencia = DateTime.Parse(rInfo.Element(ns + "Competencia").Value);
+                    nfse.IdentificacaoRps.DataEmissao = DateTime.Parse(RetornarTagTexto(rInfo, ns, "DataEmissao", OBRIGATORIO));
+                    nfse.IncentivadorCultural = RecuperarIncentivoFiscalCultural(rInfo, ns);
+                    nfse.Competencia  = DateTime.Parse(RetornarTagTexto(rInfo, ns, "Competencia", OBRIGATORIO));
 
-                #region Identificacao
-                nfse.IdentificacaoRps.Numero = String.Join("", System.Text.RegularExpressions.Regex.Split(identificacao.Element(ns + "Numero").Value,@"[^\d]"));
-                nfse.IdentificacaoRps.Serie = identificacao.Element(ns + "Serie").Value;
-                nfse.IdentificacaoRps.Tipo = converteTipoRps(int.Parse(identificacao.Element(ns + "Tipo").Value));
-                nfse.IdentificacaoRps.DataEmissao = DateTime.Parse(identificacao.Parent.Element(ns + "DataEmissao").Value);
-                nfse.IncentivadorCultural = converteSimNao(int.Parse(rInfo.Element(ns + "IncentivoFiscal").Value));
-                #endregion Identificacao
+                    #region Identificacao
+                    nfse.IdentificacaoRps.Numero      = RetornarTagTexto(identificacao, ns, "Numero", OBRIGATORIO);
+                    nfse.IdentificacaoRps.Serie       = RetornarTagTexto(identificacao, ns, "Serie", OBRIGATORIO);
+                    nfse.IdentificacaoRps.Tipo        = converteTipoRps(RetornarTagInt(identificacao, ns, "Tipo", OBRIGATORIO));                    
+                    #endregion Identificacao
 
-                #region Servico
-                nfse.Servico.ItemListaServico = servico.Element(ns + "ItemListaServico").Value;
-                nfse.Servico.CodigoTributacaoMunicipio = servico.Element(ns + "CodigoTributacaoMunicipio").Value;
-                nfse.Servico.CodigoCnae = servico.Element(ns + "CodigoCnae").Value;
-                nfse.Servico.CodigoMunicipio = int.Parse(servico.Element(ns + "CodigoMunicipio").Value);
-                nfse.Servico.Discriminacao = servico.Element(ns + "Discriminacao").Value;
-                nfse.Servico.ExigibilidadeIss = converteExigibilidadeISS(int.Parse(servico.Element(ns + "ExigibilidadeISS").Value));
-                nfse.Servico.MunicipioIncidencia = int.Parse(servico.Element(ns + "MunicipioIncidencia").Value);
-                nfse.Servico.NumeroProcesso = servico.Element(ns + "NumeroProcesso").Value;
+                    #region Servico
+                    nfse.Servico.ItemListaServico = RetornarTagTexto(servico, ns, "ItemListaServicoo", OBRIGATORIO);
+                    nfse.Servico.CodigoTributacaoMunicipio = servico.Element(ns + "CodigoTributacaoMunicipio").Value;
+                    nfse.Servico.CodigoCnae = servico.Element(ns + "CodigoCnae").Value;
+                    nfse.Servico.CodigoMunicipio = int.Parse(servico.Element(ns + "CodigoMunicipio").Value);
+                    nfse.Servico.Discriminacao = servico.Element(ns + "Discriminacao").Value;
+                    nfse.Servico.ExigibilidadeIss = converteExigibilidadeISS(int.Parse(servico.Element(ns + "ExigibilidadeISS").Value));
+                    nfse.Servico.MunicipioIncidencia = int.Parse(servico.Element(ns + "MunicipioIncidencia").Value);
+                    nfse.Servico.NumeroProcesso = servico.Element(ns + "NumeroProcesso").Value;
                     #region Valores
-                nfse.Servico.Valores.ValorServicos = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
-                nfse.Servico.Valores.ValorDeducoes = Decimal.Parse(valores.Element(ns + "ValorDeducoes").Value);
-                nfse.Servico.Valores.ValorPis = Decimal.Parse(valores.Element(ns + "ValorPis").Value);
-                nfse.Servico.Valores.ValorCofins = Decimal.Parse(valores.Element(ns + "ValorCofins").Value);
-                nfse.Servico.Valores.ValorInss = Decimal.Parse(valores.Element(ns + "ValorInss").Value);
-                nfse.Servico.Valores.ValorIr = Decimal.Parse(valores.Element(ns + "ValorIr").Value);
-                nfse.Servico.Valores.ValorCsll = Decimal.Parse(valores.Element(ns + "ValorCsll").Value);
-                nfse.Servico.Valores.IssRetidoSimNao = converteSimNao(int.Parse(servico.Element(ns + "IssRetido").Value));
-                nfse.Servico.Valores.ValorIss = Decimal.Parse(valores.Element(ns + "ValorIss").Value);
-                nfse.Servico.Valores.ValorOutrasRetencoes = Decimal.Parse(valores.Element(ns + "OutrasRetencoes").Value);
-                nfse.Servico.Valores.Aliquota = Decimal.Parse(valores.Element(ns + "Aliquota").Value);
-                nfse.Servico.Valores.DescontoCondicionado = Decimal.Parse(valores.Element(ns + "DescontoCondicionado").Value);
-                nfse.Servico.Valores.DescontoIncondicionado = Decimal.Parse(valores.Element(ns + "DescontoIncondicionado").Value);
+                    nfse.Servico.Valores.ValorServicos = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
+                    nfse.Servico.Valores.ValorDeducoes = Decimal.Parse(valores.Element(ns + "ValorDeducoes").Value);
+                    nfse.Servico.Valores.ValorPis = Decimal.Parse(valores.Element(ns + "ValorPis").Value);
+                    nfse.Servico.Valores.ValorCofins = Decimal.Parse(valores.Element(ns + "ValorCofins").Value);
+                    nfse.Servico.Valores.ValorInss = Decimal.Parse(valores.Element(ns + "ValorInss").Value);
+                    nfse.Servico.Valores.ValorIr = Decimal.Parse(valores.Element(ns + "ValorIr").Value);
+                    nfse.Servico.Valores.ValorCsll = Decimal.Parse(valores.Element(ns + "ValorCsll").Value);
+                    nfse.Servico.Valores.IssRetidoSimNao = converteSimNao(int.Parse(servico.Element(ns + "IssRetido").Value));
+                    nfse.Servico.Valores.ValorIss = Decimal.Parse(valores.Element(ns + "ValorIss").Value);
+                    nfse.Servico.Valores.ValorOutrasRetencoes = Decimal.Parse(valores.Element(ns + "OutrasRetencoes").Value);
+                    nfse.Servico.Valores.Aliquota = Decimal.Parse(valores.Element(ns + "Aliquota").Value);
+                    nfse.Servico.Valores.DescontoCondicionado = Decimal.Parse(valores.Element(ns + "DescontoCondicionado").Value);
+                    nfse.Servico.Valores.DescontoIncondicionado = Decimal.Parse(valores.Element(ns + "DescontoIncondicionado").Value);
                     #endregion Valores
-                nfse.Servico.CodigoPais = int.Parse(servico.Element(ns + "CodigoPais").Value);
-                #endregion Servico
-                //nfse.Servico.Valores.BaseCalculo = Decimal.Parse(valores.Element(ns + "BaseCalculo").Value);
-                //nfse.Servico.Valores.ValorLiquidoNfse = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
-                //nfse.Servico.Valores.ValorIssRetido = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
+                    nfse.Servico.CodigoPais = int.Parse(servico.Element(ns + "CodigoPais").Value);
+                    #endregion Servico
+                    //nfse.Servico.Valores.BaseCalculo = Decimal.Parse(valores.Element(ns + "BaseCalculo").Value);
+                    //nfse.Servico.Valores.ValorLiquidoNfse = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
+                    //nfse.Servico.Valores.ValorIssRetido = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
 
-                #region Prestador
-                //Dados do Prestador
-                nfse.Prestador.CpfCnpj = prestador.Element(ns + "CpfCnpj").Element(ns + "Cnpj").Value;
-                nfse.Prestador.InscricaoMunicipal = prestador.Element(ns + "InscricaoMunicipal").Value;
+                    #region Prestador
+                    //Dados do Prestador
+                    nfse.Prestador.CpfCnpj = RecuperarCpfOuCnpj(prestador, ns);
+                    nfse.Prestador.InscricaoMunicipal = prestador.Element(ns + "InscricaoMunicipal").Value;
 
-                #endregion Prestador
+                    #endregion Prestador
 
-                #region Tomador
-                //Dados do Tomador
-                nfse.Tomador.CpfCnpj = tomador.Element(ns + "IdentificacaoTomador").Element(ns + "CpfCnpj").Element(ns + "Cpf").Value;
-                nfse.Tomador.RazaoSocial = tomador.Element(ns + "RazaoSocial").Value;
+                    #region Tomador
+                    //Dados do Tomador
+                    nfse.Tomador.CpfCnpj = RecuperarCpfOuCnpj(tomador, ns);
+                    nfse.Tomador.RazaoSocial = tomador.Element(ns + "RazaoSocial").Value;
 
                     #region Endereco
-                var endereco = tomador.Element(ns + "Endereco");
-                nfse.Tomador.Endereco.Logradouro = endereco.Element(ns + "Endereco").Value;
-                nfse.Tomador.Endereco.Numero = endereco.Element(ns + "Numero").Value ?? "0";
-                nfse.Tomador.Endereco.CodigoMunicipio = int.Parse(endereco.Element(ns + "CodigoMunicipio").Value);
-                nfse.Tomador.Endereco.Uf = endereco.Element(ns + "Uf").Value;
-                nfse.Tomador.Endereco.Cep = endereco.Element(ns + "Cep").Value;
-                nfse.Tomador.Endereco.Complemento = endereco.Element(ns + "Complemento").Value;
-                nfse.Tomador.Endereco.Bairro = endereco.Element(ns + "Bairro").Value;
+                    var endereco = tomador.Element(ns + "Endereco");
+                    nfse.Tomador.Endereco.Logradouro = endereco.Element(ns + "Endereco").Value;
+                    nfse.Tomador.Endereco.Numero = endereco.Element(ns + "Numero").Value ?? "0";
+                    nfse.Tomador.Endereco.CodigoMunicipio = int.Parse(endereco.Element(ns + "CodigoMunicipio").Value);
+                    nfse.Tomador.Endereco.Uf = endereco.Element(ns + "Uf").Value;
+                    nfse.Tomador.Endereco.Cep = endereco.Element(ns + "Cep").Value;
+                    nfse.Tomador.Endereco.Complemento = endereco.Element(ns + "Complemento").Value;
+                    nfse.Tomador.Endereco.Bairro = endereco.Element(ns + "Bairro").Value;
                     #endregion Endereco
 
                     #region Contato
-                var contato = tomador.Element(ns + "Contato");
-                nfse.Tomador.DadosContato.Email = contato.Element(ns + "Email").Value;
-                #endregion  Contato
-                #endregion Tomador
+                    var contato = tomador.Element(ns + "Contato");
+                    nfse.Tomador.DadosContato.Email = contato.Element(ns + "Email").Value;
+                    #endregion  Contato
+                    #endregion Tomador
 
-            }
+                }
+            });
         }
         
         private void AddMunicipio(params ACBrMunicipioNFSe[] municipios)
@@ -625,7 +718,7 @@ namespace ACBr.Net.NFSe.Demo
                 txtCPFCNPJ.Text = cnpj.FormataCPFCNPJ();
             }
 
-            txtConfigName.Text = config.Get("UltimaConfiguracao", String.Empty);
+            txtConfigName.Text = !config.Get("UltimaConfiguracao", String.Empty).IsEmpty() ? config.Get("UltimaConfiguracao", String.Empty) : config.Get("NomeConfig", String.Empty);
             txtFolderConfig.Text = config.Get("CaminhoConfiguracoes", String.Empty);
             txtIM.Text = config.Get("PrestadorIM", string.Empty);
             txtRazaoSocial.Text = config.Get("PrestadorRazaoSocial", string.Empty);
@@ -698,7 +791,7 @@ namespace ACBr.Net.NFSe.Demo
             }
             catch (Exception exception)
             {
-                lblStatus.Text = exception.Message;
+                lblStatus.Text += exception.Message +  ". ";
             }
         }
 
@@ -774,37 +867,32 @@ namespace ACBr.Net.NFSe.Demo
             return (original == 1) ? NFSeSimNao.Sim : NFSeSimNao.Nao ;
         }
 
-        #endregion Methods
-
-        private void btnIniciarProc_Click(object sender, EventArgs e)
+        private void EnviarLoteRpsEnvio(XDocument xxml)
         {
-            //Faz a leitura do arquivo de Envio ou Consulta de Lotes e Decide qual processo irá chamar
-            if (VerificaTextBox(UriEnvio))
-                MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else if (VerificaTextBox(UriEnvio))
-                MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else
+            ExecuteSafe(() =>
             {
-                var uriEnvio = new UriBuilder(UriEnvio.Text);
-                var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
+                var numero = int.Parse(String.Join("", System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xxml), @"[^\d]")));
+                GerarRps(xxml);
+                //if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
 
-                var root = xml.Root;
-
-                if (root.Name.ToString().Contains("EnviarLoteRpsEnvio")) this.EnviarLoteRpsEnvio(xml);
-                
-                    
-            }
-
+                var ret = acbrNFSe.Enviar(numero);
+                wbbDados.LoadXml(ret.XmlEnvio);
+                wbbResposta.LoadXml(ret.XmlRetorno);
+            });
         }
 
-        private void EnviarLoteRpsEnvio(XDocument xml)
+        private void ConsultarLoteRps(XDocument xxml)
         {
 
-        }
+            var protocolo = BuscaNumeroProtocolo(xxml);
+            var numero = String.Join("", System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xxml), @"[^\d]"));
 
-        private void ConsultarLoteRps()
-        {
-
+            ExecuteSafe(() =>
+            {
+                var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
+                wbbDados.LoadXml(ret.XmlEnvio);
+                wbbResposta.LoadXml(ret.XmlRetorno);
+            });
         }
 
         private void SaveNewConfig()
@@ -812,6 +900,8 @@ namespace ACBr.Net.NFSe.Demo
 
             var specificConfig = ACBrConfig.CreateOrLoad(Path.Combine(txtFolderConfig.Text, txtConfigName.Text + ".config"));
 
+            specificConfig.Set("CaminhoConfiguracoes", txtFolderConfig.Text);
+            specificConfig.Set("NomeConfig", txtConfigName.Text);
             specificConfig.Set("PrestadorCPFCNPJ", txtCPFCNPJ.Text.OnlyNumbers());
             specificConfig.Set("PrestadorIM", txtIM.Text.OnlyNumbers());
             specificConfig.Set("PrestadorRazaoSocial", txtRazaoSocial.Text);
@@ -836,20 +926,9 @@ namespace ACBr.Net.NFSe.Demo
             specificConfig.Set("UriRetorno", UriRetorno.Text);
 
             specificConfig.Save();
-            
+
         }
 
-        private void btnSaveNewConfig_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void btnFolderConfig_Click(object sender, EventArgs e)
-        {
-            ExecuteSafe(() =>
-            {
-                txtFolderConfig.Text = Helpers.SelectFolder();
-            });
-        }
+        #endregion Methods
     }
 }

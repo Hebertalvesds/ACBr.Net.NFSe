@@ -22,7 +22,25 @@ namespace ACBr.Net.NFSe.Demo
 			}
 		}
 
-		public static string[] OpenFiles(string filters, string title = "Abrir")
+        public static string OpenFile(string filters, string initialDirectory, string title = "Abrir")
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.InitialDirectory = initialDirectory;
+                ofd.CheckPathExists = true;
+                ofd.CheckFileExists = true;
+                ofd.Multiselect = false;
+                ofd.Filter = filters;
+                ofd.Title = title;
+
+                if (ofd.ShowDialog().Equals(DialogResult.Cancel))
+                    return null;
+
+                return ofd.FileName;
+            }
+        }
+
+        public static string[] OpenFiles(string filters, string title = "Abrir")
 		{
 			using (var ofd = new OpenFileDialog())
 			{

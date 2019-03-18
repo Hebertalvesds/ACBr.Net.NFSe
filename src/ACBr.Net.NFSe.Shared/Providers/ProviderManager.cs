@@ -33,15 +33,8 @@ using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.NFSe.Configuracao;
-using ACBr.Net.NFSe.Providers.Betha;
-using ACBr.Net.NFSe.Providers.Betha2;
-using ACBr.Net.NFSe.Providers.Coplan;
 using ACBr.Net.NFSe.Providers.Ginfes;
 using ACBr.Net.NFSe.Providers.GovDigital;
-using ACBr.Net.NFSe.Providers.NotaCarioca;
-using ACBr.Net.NFSe.Providers.PortoAlegre;
-using ACBr.Net.NFSe.Providers.WebISS;
-using ACBr.Net.NFSe.Providers.WebISS2;
 using ACBr.Net.NFSe.Providers.GinfesV2;
 using System;
 using System.Collections.Generic;
@@ -66,15 +59,8 @@ namespace ACBr.Net.NFSe.Providers
             Providers = new Dictionary<NFSeProvider, Type>
             {
                 
-                {NFSeProvider.Betha, typeof(ProviderBetha)},
-                {NFSeProvider.Betha2, typeof(ProviderBetha2)},
-                {NFSeProvider.Coplan, typeof(ProviderCoplan)},
                 {NFSeProvider.Ginfes, typeof(ProviderGinfes)},
                 {NFSeProvider.GovDigital, typeof(ProviderGovDigital)},
-                {NFSeProvider.NotaCarioca, typeof(ProviderNotaCarioca)},
-                {NFSeProvider.PortoAlegre, typeof(ProviderPortoAlegre)},
-                {NFSeProvider.WebIss, typeof(ProviderWebIss)},
-                {NFSeProvider.WebIss2, typeof(ProviderWebIss2)},
                 {NFSeProvider.GinfesV2, typeof(ProviderGinfesV2)},
                 {NFSeProvider.Pronim, typeof(ProviderPronim)}
             };
