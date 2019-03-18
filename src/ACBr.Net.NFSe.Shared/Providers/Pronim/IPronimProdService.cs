@@ -3,7 +3,7 @@
 namespace ACBr.Net.NFSe.Providers.Pronim
 {
     [ServiceContract(Namespace = "http://www.abrasf.org.br/nfse.xsd")]
-    internal interface IPronimHomoService
+    internal interface IPronimProdService
     {
         [OperationContract(Action = "", ReplyAction = "*")]
         [DataContractFormat(Style = OperationFormatStyle.Rpc)]

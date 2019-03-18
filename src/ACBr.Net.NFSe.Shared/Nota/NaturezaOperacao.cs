@@ -262,5 +262,7 @@ namespace ACBr.Net.NFSe.Nota
 		///  DSF : Não Utiliza
 		/// </summary>
 		NT701
+
+
 	}
 }

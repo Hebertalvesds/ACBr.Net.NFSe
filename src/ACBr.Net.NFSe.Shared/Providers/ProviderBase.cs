@@ -315,6 +315,11 @@ namespace ACBr.Net.NFSe.Providers
             throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
         }
 
+        public virtual RetornoWebservice Enviar(string lote, string doc)
+        {
+            throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
+        }
+
         /// <summary>
         /// Enviar coleção de Rps para o provedor de forma sincrona.
         /// </summary>

@@ -33,17 +33,13 @@ using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 using ACBr.Net.NFSe.Configuracao;
-using ACBr.Net.NFSe.Providers.Abaco;
 using ACBr.Net.NFSe.Providers.Betha;
 using ACBr.Net.NFSe.Providers.Betha2;
 using ACBr.Net.NFSe.Providers.Coplan;
-using ACBr.Net.NFSe.Providers.DSF;
-using ACBr.Net.NFSe.Providers.FissLex;
 using ACBr.Net.NFSe.Providers.Ginfes;
 using ACBr.Net.NFSe.Providers.GovDigital;
 using ACBr.Net.NFSe.Providers.NotaCarioca;
 using ACBr.Net.NFSe.Providers.PortoAlegre;
-using ACBr.Net.NFSe.Providers.SaoPaulo;
 using ACBr.Net.NFSe.Providers.WebISS;
 using ACBr.Net.NFSe.Providers.WebISS2;
 using ACBr.Net.NFSe.Providers.GinfesV2;
@@ -53,6 +49,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using ACBr.Net.NFSe.Providers.Pronim;
 
 namespace ACBr.Net.NFSe.Providers
 {
@@ -68,20 +65,18 @@ namespace ACBr.Net.NFSe.Providers
             Municipios = new List<ACBrMunicipioNFSe>();
             Providers = new Dictionary<NFSeProvider, Type>
             {
-                {NFSeProvider.Abaco, typeof(ProviderAbaco)},
+                
                 {NFSeProvider.Betha, typeof(ProviderBetha)},
                 {NFSeProvider.Betha2, typeof(ProviderBetha2)},
                 {NFSeProvider.Coplan, typeof(ProviderCoplan)},
-                {NFSeProvider.DSF, typeof(ProviderDSF)},
-                {NFSeProvider.FissLex, typeof(ProviderFissLex)},
                 {NFSeProvider.Ginfes, typeof(ProviderGinfes)},
                 {NFSeProvider.GovDigital, typeof(ProviderGovDigital)},
                 {NFSeProvider.NotaCarioca, typeof(ProviderNotaCarioca)},
                 {NFSeProvider.PortoAlegre, typeof(ProviderPortoAlegre)},
-                {NFSeProvider.SaoPaulo, typeof(ProviderSaoPaulo)},
                 {NFSeProvider.WebIss, typeof(ProviderWebIss)},
                 {NFSeProvider.WebIss2, typeof(ProviderWebIss2)},
-                {NFSeProvider.GinfesV2, typeof(ProviderGinfesV2)}
+                {NFSeProvider.GinfesV2, typeof(ProviderGinfesV2)},
+                {NFSeProvider.Pronim, typeof(ProviderPronim)}
             };
 
             Load();
