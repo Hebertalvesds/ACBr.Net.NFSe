@@ -29,13 +29,17 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+using System.Globalization;
 using System.Xml.Linq;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.NFSe.Nota;
 
 namespace ACBr.Net.NFSe.Providers
 {
-    internal static class ProviderExtensions
+    public static class ProviderExtensions
     {
+        
         public static string GetCPF_CNPJ(this XElement element)
         {
             if (element == null) return string.Empty;

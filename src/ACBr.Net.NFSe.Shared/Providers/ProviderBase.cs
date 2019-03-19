@@ -192,9 +192,9 @@ namespace ACBr.Net.NFSe.Providers
         /// <value><c>true</c> if [retirar acentos]; otherwise, <c>false</c>.</value>
         public bool RetirarAcentos { get; set; }
 
-        public ConfigNFSe Configuracoes { get; }
+        public ConfigNFSe Configuracoes { get; set; }
 
-        public ACBrMunicipioNFSe Municipio { get; }
+        public ACBrMunicipioNFSe Municipio { get; set; }
 
         public TimeSpan? TimeOut
         {

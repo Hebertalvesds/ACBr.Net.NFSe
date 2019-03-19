@@ -32,7 +32,7 @@ namespace Starline.SmartNota.Util
       {
         TLog.Write("WebException trying to fetch the rps at URL: '" + url + "' - WebException: " + ex);
 
-        throw new ApplicationException(
+        throw new Exception(
           "Oops!! O tempo limite de conexão ao serviço para carregar as RPSs expirou. Por favor, verifique sua internet e tente novamente..." +
           Environment.NewLine + "Erro: " + ex.Message, ex);
       }

@@ -27,6 +27,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
         public ProviderPronim(ConfigNFSe config, ACBrMunicipioNFSe municipio) : base (config, municipio)
         {
             Name = "Pronim";
+            
         }
         #endregion Constructors
 
@@ -92,6 +93,94 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             var retornoWebservice = new RetornoWebservice();
 
             if (lote == "")
+                retornoWebservice.Erros.Add(new Evento { Codigo = "0", Descricao = "Lote não informado." });
+
+            if (notas.Count == 0)
+                retornoWebservice.Erros.Add(new Evento { Codigo = "0", Descricao = "RPS não informado." });
+
+            if (retornoWebservice.Erros.Count > 0)
+                return retornoWebservice;
+
+            var xmlLoteRps = new StringBuilder();
+
+            foreach (var nota in notas)
+            {
+                var xmlRps = GetXmlRps(nota, false, false, false);
+                xmlLoteRps.Append(xmlRps);
+                GravarRpsEmDisco(xmlRps, $"Rps-{nota.IdentificacaoRps.DataEmissao:yyyyMMdd}-{nota.IdentificacaoRps.Numero}.xml", nota.IdentificacaoRps.DataEmissao);
+            }
+
+            var xmlLote = new StringBuilder();
+            xmlLote.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            xmlLote.Append("<EnviarLoteRpsEnvio xmlns=\"http://www.abrasf.org.br/nfse.xsd\">");
+            xmlLote.Append($"<LoteRps Id=\"{lote}\" versao=\"2.02\">");
+            xmlLote.Append($"<NumeroLote>{lote}</NumeroLote>");
+            xmlLote.Append($"<CpfCnpj><Cnpj>{Configuracoes.PrestadorPadrao.CpfCnpj.ZeroFill(14)}</Cnpj></CpfCnpj>");
+            xmlLote.Append($"<InscricaoMunicipal>{Configuracoes.PrestadorPadrao.InscricaoMunicipal}</InscricaoMunicipal>");
+            xmlLote.Append($"<QuantidadeRps>{notas.Count}</QuantidadeRps>");
+            xmlLote.Append("<ListaRps>");
+            xmlLote.Append(xmlLoteRps);
+            xmlLote.Append("</ListaRps>");
+            xmlLote.Append("</LoteRps>");
+            xmlLote.Append("</EnviarLoteRpsEnvio>");
+            retornoWebservice.XmlEnvio = xmlLote.ToString();
+
+            if (Configuracoes.Geral.RetirarAcentos)
+            {
+                retornoWebservice.XmlEnvio = retornoWebservice.XmlEnvio.RemoveAccent();
+            }
+            retornoWebservice.XmlEnvio = AssinarMensagemXML(XDocument.Parse(retornoWebservice.XmlEnvio), Certificado).ToString();
+            //retornoWebservice.XmlEnvio = XmlSigning.AssinarXml(retornoWebservice.XmlEnvio, "EnviarLoteRpsEnvio", "LoteRps", Certificado);
+
+            GravarArquivoEmDisco(retornoWebservice.XmlEnvio, $"lote-{lote}-env.xml");
+
+            // Verifica Schema
+            ValidarSchema(retornoWebservice, "nfse_v202.xsd");
+            if (retornoWebservice.Erros.Any()) return retornoWebservice;
+
+            // Recebe mensagem de retorno
+            try
+            {
+                using (var cliente = GetCliente(TipoUrl.Enviar))
+                {
+                    retornoWebservice.XmlRetorno = cliente.RecepcionarLoteRps(GerarCabecalho(), retornoWebservice.XmlEnvio);
+                }
+            }
+            catch (Exception ex)
+            {
+                retornoWebservice.Erros.Add(new Evento { Codigo = "0", Descricao = ex.Message });
+                return retornoWebservice;
+            }
+
+            GravarArquivoEmDisco(retornoWebservice.XmlRetorno, $"lote-{lote}-ret.xml");
+
+            // Analisa mensagem de retorno
+            var xmlRet = XDocument.Parse(retornoWebservice.XmlRetorno);
+            MensagemErro(retornoWebservice, xmlRet, "EnviarLoteRpsResposta");
+            if (retornoWebservice.Erros.Any()) return retornoWebservice;
+
+            retornoWebservice.NumeroLote = xmlRet.Root?.ElementAnyNs("NumeroLote")?.GetValue<string>() ?? string.Empty;
+            retornoWebservice.DataLote = xmlRet.Root?.ElementAnyNs("DataRecebimento")?.GetValue<DateTime>() ?? DateTime.MinValue;
+            retornoWebservice.Protocolo = xmlRet.Root?.ElementAnyNs("Protocolo")?.GetValue<string>() ?? string.Empty;
+            retornoWebservice.Sucesso = (!string.IsNullOrWhiteSpace(retornoWebservice.NumeroLote));
+
+            if (!retornoWebservice.Sucesso)
+                return retornoWebservice;
+
+            // ReSharper disable once SuggestVarOrType_SimpleTypes
+            foreach (NotaFiscal nota in notas)
+            {
+                nota.NumeroLote = retornoWebservice.NumeroLote;
+            }
+
+            return retornoWebservice;
+        }
+
+        public override RetornoWebservice Enviar(int lote, NotaFiscalCollection notas)
+        {
+            var retornoWebservice = new RetornoWebservice();
+
+            if (lote == 0)
                 retornoWebservice.Erros.Add(new Evento { Codigo = "0", Descricao = "Lote não informado." });
 
             if (notas.Count == 0)
@@ -304,16 +393,16 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             var valores = new XElement(ns + "Valores");
             servico.AddChild(valores);
 
-            valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorServicos", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorServicos/100));
+            valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorServicos", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorServicos));
 
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorDeducoes", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorDeducoes));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorPis", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorPis));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorCofins", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorCofins));
-            valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorInss", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorInss/100));
+            valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorInss", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorInss));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorIr", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorIr));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorCsll", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorCsll));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "ValorIss", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.ValorIss));
-            valores.AddChild(AdicionarTag(TipoCampo.De4, "", "Aliquota", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.Aliquota / 100));  // Valor Percentual - Exemplos: 1% => 0.01   /   25,5% => 0.255   /   100% => 1
+            valores.AddChild(AdicionarTag(TipoCampo.De2, "", "Aliquota", ns, 1, 7, Ocorrencia.Obrigatoria, nota.Servico.Valores.Aliquota));  // Valor Percentual - Exemplos: 1% => 0.01   /   25,5% => 0.255   /   100% => 1
 
             servico.AddChild(AdicionarTag(TipoCampo.Int, "", "IssRetido", ns, 1, 1, Ocorrencia.Obrigatoria, issRetido));
             valores.AddChild(AdicionarTag(TipoCampo.De2, "", "DescontoIncondicionado", ns, 1, 15, Ocorrencia.Obrigatoria, nota.Servico.Valores.DescontoIncondicionado));
@@ -372,8 +461,8 @@ namespace ACBr.Net.NFSe.Providers.Pronim
                 var endereco = new XElement(ns + "Endereco");
                 tomador.AddChild(endereco);
 
-                endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Endereco", ns, 1, 125, Ocorrencia.Obrigatoria, nota.Tomador.Endereco.Logradouro));
-                endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Numero", ns, 1, 10, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.Numero));
+                endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Endereco", ns, 1, 125, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.Logradouro));
+                endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Numero", ns, 1, 10, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.Numero.IsEmpty() ? "SN" : nota.Tomador.Endereco.Numero));
                 endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Complemento", ns, 1, 10, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.Complemento));
                 endereco.AddChild(AdicionarTag(TipoCampo.Str, "", "Bairro", ns, 1, 60, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.Bairro));
                 endereco.AddChild(AdicionarTag(TipoCampo.StrNumber, "", "CodigoMunicipio", ns, 1, 7, Ocorrencia.NaoObrigatoria, nota.Tomador.Endereco.CodigoMunicipio == 9999999 ? 99999 : nota.Tomador.Endereco.CodigoMunicipio)); // Ginfes: No IBGE, o código de cidade do exterior é 9999999, mas no Ginfes é 99999

@@ -68,7 +68,7 @@ namespace ACBr.Net.NFSe
         /// Configurações do Componente
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ConfigNFSe Configuracoes { get; private set; }
+        public ConfigNFSe Configuracoes { get; set; }
 
         /// <summary>
         /// Componente de impressão

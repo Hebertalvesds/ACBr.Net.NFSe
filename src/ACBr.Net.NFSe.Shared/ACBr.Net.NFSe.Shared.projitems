@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\ConfigCertificadosNFSe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\ConfigGeralNFSe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\ConfigWebServicesNFSe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MontaArquivoMunicipio.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\NFSeVersao.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuracao\SchemaNFSe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DANFSeFiltro.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Providers\WebIss\IWebISSServiceClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\WebIss\ProviderWebISS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Providers\WebIss\WebIssServiceClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XmlConstruct.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Municipios.nfse" />

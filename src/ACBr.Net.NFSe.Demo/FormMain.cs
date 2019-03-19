@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using Starline.SmartNota.Util;
 using System.Xml;
+using System.Globalization;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -25,8 +26,10 @@ namespace ACBr.Net.NFSe.Demo
 
         private ACBrNFSe acbrNFSe;
         private ACBrConfig config;
+
         private const bool OBRIGATORIO = true;
         private const bool NAOOBRIGATORIO = false;
+        
 
         #endregion Fields
 
@@ -445,82 +448,9 @@ namespace ACBr.Net.NFSe.Demo
 
         #endregion Overrides
 
-        private string RetornarTagTexto(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
-        {
-            var ret = "";
-            XElement elDefault = new XElement("default","");
-
-            ExecuteSafe(() =>
-            {
-                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
-
-                if (obrigatorio && tag.Value.IsEmpty()) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
-
-                ret = tag.Value;
-
-            });
-
-            return ret;
-        }
-
-        private int RetornarTagInt(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
-        {
-            var ret = 0;
-            XElement elDefault = new XElement("default", 0);
-
-            ExecuteSafe(() =>
-            {
-                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
-                if (obrigatorio && int.Parse(tag.Value) == 0) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
-                ret = int.Parse(tag.Value);
-            });
-
-            return ret;
-        }
-
-        private double RetornarTagDouble(XElement xElement, XNamespace ns, string nameTag, bool obrigatorio)
-        {
-            var ret = 0.0d;
-            XElement elDefault = new XElement("default", 0);
-
-            ExecuteSafe(() =>
-            {
-                var tag = xElement.Descendants(ns + nameTag).DefaultIfEmpty(elDefault).First();
-                if (obrigatorio && int.Parse(tag.Value) == 0) throw new Exception("A tag: " + nameTag + " é de Presença Obrigatória");
-                ret = double.Parse(tag.Value);
-            });
-
-            return ret;
-        }
-
-        private string RecuperarCpfOuCnpj(XElement root, XNamespace ns)
-        {
-            string cpfCnpj = String.Empty;
-
-            ExecuteSafe(() =>
-            {
-                cpfCnpj = (!root.Descendants(ns + "Cnpj").IsNull()) ? root.Descendants(ns + "Cnpj").First().Value : root.Descendants(ns + "Cpf").First().Value;
-            });
-
-            return cpfCnpj;
-        }
-
-        private NFSeSimNao RecuperarIncentivoFiscalCultural(XElement root, XNamespace ns)
-        {
-            int incentivador = 2;
-
-            ExecuteSafe(() =>
-            {
-                incentivador = (!root.Descendants(ns + "IncentivoFiscal").IsNull()) ? 
-                int.Parse(root.Descendants(ns + "IncentivoFiscal").First().Value) :
-                int.Parse(root.Descendants(ns + "IncentivadorCultural").First().Value);
-            });
-
-            return (incentivador == 1) ? NFSeSimNao.Sim : NFSeSimNao.Nao;
-        }
-
         private void GerarRps(XDocument xml)
         {
+            
             var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
 
             if (municipio == null) return;
@@ -528,89 +458,17 @@ namespace ACBr.Net.NFSe.Demo
             acbrNFSe.NotasFiscais.Clear();
 
             var ns = xml.Root.GetDefaultNamespace();
-            var listaRps = xml.Root.Element(ns + "LoteRps").Element(ns + "ListaRps").Elements(ns + "Rps");
-
+            var loteRps = xml.Root.Element(ns + "LoteRps");
+            var listaRps = loteRps.Element(ns + "ListaRps").Elements(ns + "Rps");
+            acbrNFSe.Configuracoes.PrestadorPadrao.CpfCnpj = loteRps.Descendants(ns + "Cnpj").First().Value ?? loteRps.Descendants(ns + "Cpf").First().Value;
             ExecuteSafe(() =>
             {
                 foreach (var rps in listaRps)
                 {
                     //Recupera a cadeia de informações dos nós principais
                     var nfse          = acbrNFSe.NotasFiscais.AddNew();
-                    var rInfo         = rps.Element(ns + "InfDeclaracaoPrestacaoServico");
-                    var identificacao = rInfo.Element(ns + "Rps").Element(ns + "IdentificacaoRps");
-                    var servico       = rInfo.Element(ns + "Servico");
-                    var valores       = servico.Element(ns + "Valores");
-                    var prestador     = rInfo.Element(ns + "Prestador");
-                    var tomador       = rInfo.Element(ns + "Tomador");
-
-                    nfse.IdentificacaoRps.DataEmissao = DateTime.Parse(RetornarTagTexto(rInfo, ns, "DataEmissao", OBRIGATORIO));
-                    nfse.IncentivadorCultural = RecuperarIncentivoFiscalCultural(rInfo, ns);
-                    nfse.Competencia  = DateTime.Parse(RetornarTagTexto(rInfo, ns, "Competencia", OBRIGATORIO));
-
-                    #region Identificacao
-                    nfse.IdentificacaoRps.Numero      = RetornarTagTexto(identificacao, ns, "Numero", OBRIGATORIO);
-                    nfse.IdentificacaoRps.Serie       = RetornarTagTexto(identificacao, ns, "Serie", OBRIGATORIO);
-                    nfse.IdentificacaoRps.Tipo        = converteTipoRps(RetornarTagInt(identificacao, ns, "Tipo", OBRIGATORIO));                    
-                    #endregion Identificacao
-
-                    #region Servico
-                    nfse.Servico.ItemListaServico = RetornarTagTexto(servico, ns, "ItemListaServicoo", OBRIGATORIO);
-                    nfse.Servico.CodigoTributacaoMunicipio = servico.Element(ns + "CodigoTributacaoMunicipio").Value;
-                    nfse.Servico.CodigoCnae = servico.Element(ns + "CodigoCnae").Value;
-                    nfse.Servico.CodigoMunicipio = int.Parse(servico.Element(ns + "CodigoMunicipio").Value);
-                    nfse.Servico.Discriminacao = servico.Element(ns + "Discriminacao").Value;
-                    nfse.Servico.ExigibilidadeIss = converteExigibilidadeISS(int.Parse(servico.Element(ns + "ExigibilidadeISS").Value));
-                    nfse.Servico.MunicipioIncidencia = int.Parse(servico.Element(ns + "MunicipioIncidencia").Value);
-                    nfse.Servico.NumeroProcesso = servico.Element(ns + "NumeroProcesso").Value;
-                    #region Valores
-                    nfse.Servico.Valores.ValorServicos = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
-                    nfse.Servico.Valores.ValorDeducoes = Decimal.Parse(valores.Element(ns + "ValorDeducoes").Value);
-                    nfse.Servico.Valores.ValorPis = Decimal.Parse(valores.Element(ns + "ValorPis").Value);
-                    nfse.Servico.Valores.ValorCofins = Decimal.Parse(valores.Element(ns + "ValorCofins").Value);
-                    nfse.Servico.Valores.ValorInss = Decimal.Parse(valores.Element(ns + "ValorInss").Value);
-                    nfse.Servico.Valores.ValorIr = Decimal.Parse(valores.Element(ns + "ValorIr").Value);
-                    nfse.Servico.Valores.ValorCsll = Decimal.Parse(valores.Element(ns + "ValorCsll").Value);
-                    nfse.Servico.Valores.IssRetidoSimNao = converteSimNao(int.Parse(servico.Element(ns + "IssRetido").Value));
-                    nfse.Servico.Valores.ValorIss = Decimal.Parse(valores.Element(ns + "ValorIss").Value);
-                    nfse.Servico.Valores.ValorOutrasRetencoes = Decimal.Parse(valores.Element(ns + "OutrasRetencoes").Value);
-                    nfse.Servico.Valores.Aliquota = Decimal.Parse(valores.Element(ns + "Aliquota").Value);
-                    nfse.Servico.Valores.DescontoCondicionado = Decimal.Parse(valores.Element(ns + "DescontoCondicionado").Value);
-                    nfse.Servico.Valores.DescontoIncondicionado = Decimal.Parse(valores.Element(ns + "DescontoIncondicionado").Value);
-                    #endregion Valores
-                    nfse.Servico.CodigoPais = int.Parse(servico.Element(ns + "CodigoPais").Value);
-                    #endregion Servico
-                    //nfse.Servico.Valores.BaseCalculo = Decimal.Parse(valores.Element(ns + "BaseCalculo").Value);
-                    //nfse.Servico.Valores.ValorLiquidoNfse = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
-                    //nfse.Servico.Valores.ValorIssRetido = Decimal.Parse(valores.Element(ns + "ValorServicos").Value);
-
-                    #region Prestador
-                    //Dados do Prestador
-                    nfse.Prestador.CpfCnpj = RecuperarCpfOuCnpj(prestador, ns);
-                    nfse.Prestador.InscricaoMunicipal = prestador.Element(ns + "InscricaoMunicipal").Value;
-
-                    #endregion Prestador
-
-                    #region Tomador
-                    //Dados do Tomador
-                    nfse.Tomador.CpfCnpj = RecuperarCpfOuCnpj(tomador, ns);
-                    nfse.Tomador.RazaoSocial = tomador.Element(ns + "RazaoSocial").Value;
-
-                    #region Endereco
-                    var endereco = tomador.Element(ns + "Endereco");
-                    nfse.Tomador.Endereco.Logradouro = endereco.Element(ns + "Endereco").Value;
-                    nfse.Tomador.Endereco.Numero = endereco.Element(ns + "Numero").Value ?? "0";
-                    nfse.Tomador.Endereco.CodigoMunicipio = int.Parse(endereco.Element(ns + "CodigoMunicipio").Value);
-                    nfse.Tomador.Endereco.Uf = endereco.Element(ns + "Uf").Value;
-                    nfse.Tomador.Endereco.Cep = endereco.Element(ns + "Cep").Value;
-                    nfse.Tomador.Endereco.Complemento = endereco.Element(ns + "Complemento").Value;
-                    nfse.Tomador.Endereco.Bairro = endereco.Element(ns + "Bairro").Value;
-                    #endregion Endereco
-
-                    #region Contato
-                    var contato = tomador.Element(ns + "Contato");
-                    nfse.Tomador.DadosContato.Email = contato.Element(ns + "Email").Value;
-                    #endregion  Contato
-                    #endregion Tomador
+                    int codigoMunicipio = acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.CodigoMunicipio;
+                    MontaArquivoMunicipio.ChamaPreenchimentoDinamico(codigoMunicipio, rps, ref nfse);
 
                 }
             });
@@ -821,45 +679,6 @@ namespace ACBr.Net.NFSe.Demo
             var id = xml.Root.Element(ns + "LoteRps").Element(ns + "NumeroLote").Value;
 
             return id;
-        }
-
-        private TipoRps converteTipoRps(int tipoOriginal)
-        {
-            var tipoRps = (tipoOriginal == 1) ? TipoRps.RPS : (tipoOriginal == 2) ? TipoRps.NFConjugada : TipoRps.Cupom ;
-
-            return tipoRps;
-        }
-
-        private ExigibilidadeIss converteExigibilidadeISS(int tipoOriginal)
-        {
-            ExigibilidadeIss exigibilidade;
-
-            switch (tipoOriginal)
-            {
-                case 2:
-                    exigibilidade = ExigibilidadeIss.NaoIncidencia;
-                    break;
-                case 3:
-                    exigibilidade = ExigibilidadeIss.Isencao;
-                    break;
-                case 4:
-                    exigibilidade = ExigibilidadeIss.Exportacao;
-                    break;
-                case 5:
-                    exigibilidade = ExigibilidadeIss.Imunidade;
-                    break;
-                case 6:
-                    exigibilidade = ExigibilidadeIss.SuspensaDecisaoJudicial;
-                    break;
-                case 7:
-                    exigibilidade = ExigibilidadeIss.SuspensaProcessoAdministrativo;
-                    break;
-                default:
-                    exigibilidade = ExigibilidadeIss.Exigivel;
-                    break;
-            }
-
-            return exigibilidade;
         }
 
         private NFSeSimNao converteSimNao(int original)
