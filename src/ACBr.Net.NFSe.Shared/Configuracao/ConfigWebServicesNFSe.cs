@@ -40,6 +40,7 @@ using ACBr.Net.Core;
 namespace ACBr.Net.NFSe.Configuracao
 {
     [TypeConverter(typeof(ACBrExpandableObjectConverter))]
+    
     public sealed class ConfigWebServicesNFSe : DFeWebserviceConfigBase<ACBrNFSe>
     {
         #region Fields

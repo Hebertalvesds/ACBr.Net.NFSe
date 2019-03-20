@@ -6,6 +6,8 @@ using ACBr.Net.NFSe.Configuracao;
 using ACBr.Net.NFSe.Nota;
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -27,11 +29,13 @@ namespace ACBr.Net.NFSe.Providers.Pronim
         public ProviderPronim(ConfigNFSe config, ACBrMunicipioNFSe municipio) : base (config, municipio)
         {
             Name = "Pronim";
-            
         }
         #endregion Constructors
 
         #region Methods
+
+        
+
         public override RetornoWebservice Enviar(string lote, string doc)
         {
             var retornoWebservice = new RetornoWebservice();
@@ -201,7 +205,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             var xmlLote = new StringBuilder();
             xmlLote.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             xmlLote.Append("<EnviarLoteRpsEnvio xmlns=\"http://www.abrasf.org.br/nfse.xsd\">");
-            xmlLote.Append($"<LoteRps Id=\"{lote}\" versao=\"2.02\">");
+            xmlLote.Append($"<LoteRps Id=\"LOTE{lote}\" versao=\"2.02\">");
             xmlLote.Append($"<NumeroLote>{lote}</NumeroLote>");
             xmlLote.Append($"<CpfCnpj><Cnpj>{Configuracoes.PrestadorPadrao.CpfCnpj.ZeroFill(14)}</Cnpj></CpfCnpj>");
             xmlLote.Append($"<InscricaoMunicipal>{Configuracoes.PrestadorPadrao.InscricaoMunicipal}</InscricaoMunicipal>");
@@ -217,8 +221,8 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             {
                 retornoWebservice.XmlEnvio = retornoWebservice.XmlEnvio.RemoveAccent();
             }
-            retornoWebservice.XmlEnvio = AssinarMensagemXML(XDocument.Parse(retornoWebservice.XmlEnvio), Certificado).ToString();
-            //retornoWebservice.XmlEnvio = XmlSigning.AssinarXml(retornoWebservice.XmlEnvio, "EnviarLoteRpsEnvio", "LoteRps", Certificado);
+            //retornoWebservice.XmlEnvio = AssinarMensagemXML(XDocument.Parse(retornoWebservice.XmlEnvio), Certificado).ToString();
+            retornoWebservice.XmlEnvio = XmlSigning.AssinarXml(retornoWebservice.XmlEnvio, "EnviarLoteRpsEnvio", "LoteRps", Certificado);
 
             GravarArquivoEmDisco(retornoWebservice.XmlEnvio, $"lote-{lote}-env.xml");
 
@@ -356,7 +360,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
 
             xmlDoc.Add(rps);
 
-            var infoRps = new XElement(ns + "InfDeclaracaoPrestacaoServico", new XAttribute("Id", nota.IdentificacaoRps.Numero));
+            var infoRps = new XElement(ns + "InfDeclaracaoPrestacaoServico", new XAttribute("Id", "RPS" + nota.IdentificacaoRps.Numero));
             rps.Add(infoRps);
 
             var rpsInfo = new XElement(ns + "Rps");
@@ -543,7 +547,6 @@ namespace ACBr.Net.NFSe.Providers.Pronim
 
                 case DFeTipoAmbiente.Producao:
                     return new PronimProdServiceClient(this, tipo);
-
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -559,7 +562,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
 
 
             key = (System.Security.Cryptography.RSACryptoServiceProvider)certificado.PrivateKey;
-            keyInfo.AddClause(new System.Security.Cryptography.Xml.KeyInfoX509Data(certificado));
+            keyInfo.AddClause(clause: new System.Security.Cryptography.Xml.KeyInfoX509Data(certificado));
             signedDocument = new System.Security.Cryptography.Xml.SignedXml(xmlDoc);
 
             signedDocument.SigningKey = key;
@@ -569,7 +572,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             reference.Uri = String.Empty;
 
             reference.AddTransform(new System.Security.Cryptography.Xml.XmlDsigEnvelopedSignatureTransform());
-            reference.AddTransform(new System.Security.Cryptography.Xml.XmlDsigExcC14NTransform(false));
+            reference.AddTransform(transform: new System.Security.Cryptography.Xml.XmlDsigExcC14NTransform(false));
 
             signedDocument.AddReference(reference);
             signedDocument.ComputeSignature();

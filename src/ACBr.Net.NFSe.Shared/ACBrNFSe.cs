@@ -39,6 +39,8 @@ using System;
 using System.ComponentModel;
 using System.Net;
 using ACBr.Net.Core.Logging;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 #if !NETSTANDARD2_0
 
@@ -102,13 +104,18 @@ namespace ACBr.Net.NFSe
                 $"ERRO: Conjunto de RPS transmitidos (máximo de 50 RPS) excedido.{Environment.NewLine}" +
                 $"Quantidade atual: {NotasFiscais.Count}");
 
+            
             var oldProtocol = ServicePointManager.SecurityProtocol;
 
             try
             {
+                
                 ServicePointManager.SecurityProtocol = protocolType;
+                ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateServerCertificate);
+
                 using (var provider = ProviderManager.GetProvider(Configuracoes))
                 {
+                    
                     var ret = sincrono
                         ? provider.EnviarSincrono(lote, NotasFiscais)
                         : provider.Enviar(lote, NotasFiscais);
@@ -503,6 +510,15 @@ namespace ACBr.Net.NFSe
         protected override void OnDisposing()
         {
         }
+
+        public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            if (sslPolicyErrors == SslPolicyErrors.None)
+                return true;
+
+            throw new Exception(sslPolicyErrors.ToString());
+        }
+
 
         #endregion Override Methods
 

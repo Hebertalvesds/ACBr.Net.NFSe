@@ -141,6 +141,7 @@
             this.tabPage5.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -268,6 +269,7 @@
             this.rtLogResposta.Location = new System.Drawing.Point(3, 3);
             this.rtLogResposta.Name = "rtLogResposta";
             this.rtLogResposta.ReadOnly = true;
+            this.rtLogResposta.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.rtLogResposta.Size = new System.Drawing.Size(554, 322);
             this.rtLogResposta.TabIndex = 1;
             this.rtLogResposta.Text = "";
@@ -1108,6 +1110,8 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 549);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(865, 22);
@@ -1117,10 +1121,6 @@
             // 
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 17);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
-            {
-                lblStatus
-            });
             // 
             // FormMain
             // 
@@ -1155,6 +1155,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

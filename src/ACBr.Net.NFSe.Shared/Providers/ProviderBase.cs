@@ -46,6 +46,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Linq;
 using ACBr.Net.DFe.Core.Document;
+using System.Net.Security;
 
 namespace ACBr.Net.NFSe.Providers
 {

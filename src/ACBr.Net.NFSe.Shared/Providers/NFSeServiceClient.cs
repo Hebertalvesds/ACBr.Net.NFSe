@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ACBr.Net.DFe.Core.Service;
@@ -52,6 +53,7 @@ namespace ACBr.Net.NFSe.Providers
         {
             serviceLock = new object();
             Provider = provider;
+            Provider.Configuracoes.Arquivos.Salvar = true;
 
             switch (tipoUrl)
             {

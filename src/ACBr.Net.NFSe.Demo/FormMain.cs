@@ -49,6 +49,7 @@ namespace ACBr.Net.NFSe.Demo
 
         private void btnIniciarProc_Click(object sender, EventArgs e)
         {
+            lblStatus.Text = "";
             //Faz a leitura do arquivo de Envio ou Consulta de Lotes e Decide qual processo irá chamar
             if (VerificaTextBox(UriEnvio))
                 MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -54,7 +54,9 @@ namespace ACBr.Net.NFSe
         #endregion Fields
 
         #region Properties
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Browsable(false)]
         public ACBrNFSe Parent
         {
