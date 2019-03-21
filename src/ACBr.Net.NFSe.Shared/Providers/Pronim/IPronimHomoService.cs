@@ -2,12 +2,15 @@
 
 namespace ACBr.Net.NFSe.Providers.Pronim
 {
-    [ServiceContract(Namespace = "http://www.abrasf.org.br/nfse.xsd")]
+    [ServiceContract(Namespace = "http://tempuri.org/")]
     internal interface IPronimHomoService
     {
-        [OperationContract(Action = "", ReplyAction = "*")]
-        [DataContractFormat(Style = OperationFormatStyle.Rpc)]
-        [return: MessageParameter(Name = "return")]
-        string RecepcionarLoteRps([MessageParameter(Name = "arg0")]string arg0, [MessageParameter(Name = "arg1")]string arg1);
+        [OperationContract(Action = "http://tempuri.org/INFSEGeracao/RecepcionarLoteRps")]
+        [DataContractFormat(Style = OperationFormatStyle.Document)]
+        string RecepcionarLoteRps(string cabecalho, string xmlEnvio);
+
+        [OperationContract(Action = "http://tempuri.org/INFSEConsultas/ConsultarLoteRps")]
+        [DataContractFormat(Style = OperationFormatStyle.Document)]
+        string ConsultarLoteRps(string cabecalho, string xmlConsulta);
     }
 }

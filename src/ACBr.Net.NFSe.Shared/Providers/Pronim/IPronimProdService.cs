@@ -2,16 +2,17 @@
 
 namespace ACBr.Net.NFSe.Providers.Pronim
 {
-
     [ServiceContract(Namespace = "http://tempuri.org/")]
     internal interface IPronimProdService
     {
-        
-        [OperationContract(Action = "http://tempuri.org/INFSEGeracao/RecepcionarLoteRps", ReplyAction = "http://tempuri.org/INFSEGeracao/RecepcionarLoteRpsResponse")]
-        [DataContractFormat(Style = OperationFormatStyle.Document)]
-        [return: MessageParameter(Name = "return")]
-        string RecepcionarLoteRps([MessageParameter(Name = "arg0")]string arg0, [MessageParameter(Name = "arg1")]string arg1);
 
-        
+        [OperationContract(Action = "http://tempuri.org/INFSEGeracao/RecepcionarLoteRps")]
+        [DataContractFormat(Style = OperationFormatStyle.Document)]
+        string RecepcionarLoteRps(string cabecalho, string xmlEnvio);
+
+        [OperationContract(Action = "http://tempuri.org/INFSEConsultas/ConsultarLoteRps")]
+        [DataContractFormat(Style = OperationFormatStyle.Document)]
+        string ConsultarLoteRps(string cabecalho, string xmlConsulta);
+
     }
 }

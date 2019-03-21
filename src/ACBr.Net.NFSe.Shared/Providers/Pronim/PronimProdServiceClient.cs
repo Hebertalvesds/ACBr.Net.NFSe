@@ -31,17 +31,26 @@ namespace ACBr.Net.NFSe.Providers.Pronim
         #endregion Fields
 
         #region Methods
-        public string RecepcionarLoteRps(string cabecalho, string dados)
+        public string RecepcionarLoteRps(string cabecalho, string xmlEnvio)
         {
-            return ((IPronimProdService)this).RecepcionarLoteRps(cabecalho, dados);
+            return ((IPronimProdService)this).RecepcionarLoteRps(cabecalho, xmlEnvio);
         }
 
+        public string ConsultarLoteRps(string cabecalho, string xmlConsulta)
+        {
+            return ((IPronimProdService)this).RecepcionarLoteRps(cabecalho, xmlConsulta);
+        }
         #endregion Methods
 
         #region Interface Methods
-        string IPronimProdService.RecepcionarLoteRps(string arg0, string arg1)
+        string IPronimProdService.RecepcionarLoteRps(string cabecalho, string xmlEnvio)
         {
-            return Channel.RecepcionarLoteRps(arg0, arg1);
+            return Channel.RecepcionarLoteRps(cabecalho, xmlEnvio);
+        }
+
+        string IPronimProdService.ConsultarLoteRps(string cabecalho, string xmlConsulta)
+        {
+            return Channel.ConsultarLoteRps(cabecalho, xmlConsulta);
         }
         #endregion Interface Methods
     }

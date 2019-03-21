@@ -63,7 +63,7 @@ namespace ACBr.Net.NFSe.Demo
                 var root = xml.Root;
 
                 if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
-                if (root.Name.ToString().Contains("ConsultarLoteRps")) this.EnviarLoteRpsEnvio(xml);
+                if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
 
             }
 
@@ -661,23 +661,14 @@ namespace ACBr.Net.NFSe.Demo
 
         private string BuscaNumeroProtocolo(XDocument xml)
         {
-            var consulta = from p in xml.Root.Elements() select p;
+            var consulta = xml.Root.ElementAnyNs("Protocolo")?.GetValue<string>() ?? string.Empty;
 
-            foreach (var registro in consulta)
-            {
-                if (registro.ToString().IndexOf("Protocolo") > 0)
-                {
-                    return registro.Value;
-                }
-            }
-
-            return String.Empty;
+            return consulta;
         }
 
         private string BuscaNumeroLote(XDocument xml)
         {
-            var ns = xml.Root.GetDefaultNamespace();
-            var id = xml.Root.Element(ns + "LoteRps").Element(ns + "NumeroLote").Value;
+            var id = xml.Root.Document.Descendants(xml.Root.GetDefaultNamespace() + "NumeroLote").First().Value ?? String.Empty;
 
             return id;
         }
@@ -691,9 +682,15 @@ namespace ACBr.Net.NFSe.Demo
         {
             ExecuteSafe(() =>
             {
-                var numero = int.Parse(String.Join("", System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xxml), @"[^\d]")));
-                GerarRps(xxml);
+                
+                var numero = int.Parse(BuscaNumeroLote(xxml));
+                if (numero == 0)
+                {
+                    MessageBox.Show("O Número do Lote não foi encontrado!", "Envio cancelado..", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 //if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
+                GerarRps(xxml);
 
                 var ret = acbrNFSe.Enviar(numero);
                 wbbDados.LoadXml(ret.XmlEnvio);
@@ -705,7 +702,7 @@ namespace ACBr.Net.NFSe.Demo
         {
 
             var protocolo = BuscaNumeroProtocolo(xxml);
-            var numero = String.Join("", System.Text.RegularExpressions.Regex.Split(BuscaNumeroLote(xxml), @"[^\d]"));
+            var numero = BuscaNumeroLote(xxml);
 
             ExecuteSafe(() =>
             {
