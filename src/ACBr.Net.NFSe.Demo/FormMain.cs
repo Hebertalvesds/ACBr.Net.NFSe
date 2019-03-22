@@ -830,5 +830,30 @@ namespace ACBr.Net.NFSe.Demo
         }
 
         #endregion Methods
+
+        private void salvarEditarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var protocolo = "";
+            var numero = 0;
+            if (InputBox.Show("Numero protocolo", "Digite o numero do protocolo.", ref protocolo).Equals(DialogResult.Cancel)) return;
+            var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
+            if (ret.Sucesso)
+            {
+                this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno.Text);
+                ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno.Text);
+            }
+            wbbDados.LoadXml(ret.XmlEnvio);
+            wbbResposta.LoadXml(ret.XmlRetorno);
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

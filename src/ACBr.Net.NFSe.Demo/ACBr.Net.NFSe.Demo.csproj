@@ -67,6 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACBrConfig.cs" />
+    <Compile Include="Configuracoes\FormNova.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuracoes\FormNova.Designer.cs">
+      <DependentUpon>FormNova.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="FormEdtMunicipio.cs">
       <SubType>Form</SubType>
@@ -85,6 +91,9 @@
     <Compile Include="ItemData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Configuracoes\FormNova.resx">
+      <DependentUpon>FormNova.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEdtMunicipio.resx">
       <DependentUpon>FormEdtMunicipio.cs</DependentUpon>
     </EmbeddedResource>

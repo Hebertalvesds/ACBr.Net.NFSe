@@ -123,6 +123,10 @@
             this.cmhProvedor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.configuraçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.salvarEditarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl3.SuspendLayout();
@@ -140,6 +144,7 @@
             this.tabPage6.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -147,14 +152,15 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(865, 549);
+            this.tabControl1.Size = new System.Drawing.Size(865, 525);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.UriRetorno);
             this.tabPage1.Controls.Add(this.btnIniciarProc);
             this.tabPage1.Controls.Add(this.label16);
@@ -165,7 +171,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(857, 523);
+            this.tabPage1.Size = new System.Drawing.Size(857, 499);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "NFSe";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -221,7 +227,7 @@
             this.tabControl3.Controls.Add(this.tabPage12);
             this.tabControl3.Controls.Add(this.tabPage13);
             this.tabControl3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabControl3.Location = new System.Drawing.Point(286, 166);
+            this.tabControl3.Location = new System.Drawing.Point(286, 142);
             this.tabControl3.Name = "tabControl3";
             this.tabControl3.SelectedIndex = 0;
             this.tabControl3.Size = new System.Drawing.Size(568, 354);
@@ -359,7 +365,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(283, 517);
+            this.groupBox1.Size = new System.Drawing.Size(283, 493);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configurações";
@@ -973,7 +979,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(857, 523);
+            this.tabPage3.Size = new System.Drawing.Size(857, 499);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Gerenciador de Cidades";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1091,12 +1097,48 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 549);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(865, 22);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 17);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configuraçõesToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(865, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // configuraçõesToolStripMenuItem
+            // 
+            this.configuraçõesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.salvarEditarToolStripMenuItem});
+            this.configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
+            this.configuraçõesToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.configuraçõesToolStripMenuItem.Text = "Configurações";
+            // 
+            // salvarEditarToolStripMenuItem
+            // 
+            this.salvarEditarToolStripMenuItem.Name = "salvarEditarToolStripMenuItem";
+            this.salvarEditarToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.salvarEditarToolStripMenuItem.Text = "Criar Novo";
+            this.salvarEditarToolStripMenuItem.Click += new System.EventHandler(this.salvarEditarToolStripMenuItem_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(685, 89);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(165, 23);
+            this.button1.TabIndex = 29;
+            this.button1.Text = "Consulta de Lote";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FormMain
             // 
@@ -1105,11 +1147,14 @@
             this.ClientSize = new System.Drawing.Size(865, 571);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ACBr.Net.NFSe Demo";
+            this.Text = "SmartNota by ACBr.net";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1133,6 +1178,8 @@
             this.tabPage3.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1235,6 +1282,10 @@
         private System.Windows.Forms.Button btnAbreConfig;
         private System.Windows.Forms.TextBox txtConfigName;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem configuraçõesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem salvarEditarToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
     }
 }
 
