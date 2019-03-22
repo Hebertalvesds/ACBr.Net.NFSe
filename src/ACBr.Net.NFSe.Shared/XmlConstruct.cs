@@ -8,6 +8,24 @@ namespace ACBr.Net.NFSe
 {
     public static class XmlConstruct
     {
+        public static decimal Aliquota(string codigoTributacao, string municipio)
+        {
+            if (municipio.ToUpper().Equals("CONTAGEM"))
+            {
+                switch (codigoTributacao)
+                {
+                    case "853250000":
+                        return 2;
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
+            }
+
+            return 0;
+        }
+
         public static string GetCPF_CNPJ(this XElement element)
         {
             if (element == null) return string.Empty;

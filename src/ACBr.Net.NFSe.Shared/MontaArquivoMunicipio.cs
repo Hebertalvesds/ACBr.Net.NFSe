@@ -70,7 +70,7 @@ namespace ACBr.Net.NFSe
             nfse.Servico.Valores.ValorCsll = XmlConstruct.GetDecimalElement(valores, "ValorCsll");
             nfse.Servico.Valores.ValorIss = XmlConstruct.GetDecimalElement(valores, "ValorIss");
             nfse.Servico.Valores.ValorOutrasRetencoes = XmlConstruct.GetDecimalElement(valores, "OutrasRetencoes");
-            nfse.Servico.Valores.Aliquota = XmlConstruct.GetDecimalElement(valores, "Aliquota");
+            nfse.Servico.Valores.Aliquota = XmlConstruct.GetDecimalElement(valores, "Aliquota") > 0 ? XmlConstruct.GetDecimalElement(valores, "Aliquota") : XmlConstruct.Aliquota(nfse.Servico.CodigoTributacaoMunicipio, "CONTAGEM");
             nfse.Servico.Valores.DescontoCondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoCondicionado");
             nfse.Servico.Valores.DescontoIncondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoIncondicionado");
             #endregion Valores
