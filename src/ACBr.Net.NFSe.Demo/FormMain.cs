@@ -63,7 +63,8 @@ namespace ACBr.Net.NFSe.Demo
                 var root = xml.Root;
 
                 if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
-                if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
+                else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
+                else MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
 
             }
 
@@ -668,9 +669,9 @@ namespace ACBr.Net.NFSe.Demo
 
         private string BuscaNumeroLote(XDocument xml)
         {
-            var id = xml.Root.Document.Descendants(xml.Root.GetDefaultNamespace() + "NumeroLote").First().Value ?? String.Empty;
+            var lote =  xml.ElementAnyNs("NumeroLote").GetValue<string>() ?? xml.Document.Descendants(xml.Root.GetDefaultNamespace() + "NumeroLote").First().Value ?? String.Empty;
 
-            return id;
+            return lote;
         }
 
         private NFSeSimNao converteSimNao(int original)
@@ -693,6 +694,12 @@ namespace ACBr.Net.NFSe.Demo
                 GerarRps(xxml);
 
                 var ret = acbrNFSe.Enviar(numero);
+                if (ret.Sucesso)
+                {
+                    this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno.Text);
+                    var numeroLote = ret.NumeroLote;
+                    ResultadoEnvioLoteRps(numeroLote, ret.XmlRetorno, UriRetorno.Text);
+                }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
             });
@@ -702,11 +709,16 @@ namespace ACBr.Net.NFSe.Demo
         {
 
             var protocolo = BuscaNumeroProtocolo(xxml);
-            var numero = BuscaNumeroLote(xxml);
+            var numero = 0;
 
             ExecuteSafe(() =>
             {
                 var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
+                if (ret.Sucesso)
+                {
+                    this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno.Text);
+                    ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno.Text);
+                }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
             });
@@ -744,6 +756,77 @@ namespace ACBr.Net.NFSe.Demo
 
             specificConfig.Save();
 
+        }
+
+        private void ResultadoEnvioLoteRps(string lote, string xml, string caminho)
+        {
+            var param = new System.Collections.Specialized.NameValueCollection
+            {
+                {"numeroLote", lote},
+                {"xml", xml}
+            };
+
+            try
+            {
+                caminho += "?tipoOperacao=1";
+
+                var webCliente = new System.Net.WebClient();
+                byte[] bytes_resposta = webCliente.UploadValues(caminho, "POST", param);
+                ASCIIEncoding enc = new ASCIIEncoding();
+                string resposta = enc.GetString(bytes_resposta);
+            }
+            catch (System.Net.WebException we)
+            {
+                this.Log().Error("WebException: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + we);
+                throw new ApplicationException(
+                    "Oops!! O tempo limite de conexão ao serviço de notificar o estado dos RPSs no Smart expirou. Por favor, verifique sua internet e tente novamente..." +
+                    Environment.NewLine + "Erro: " + we.Message, we
+                );
+            }
+            catch (Exception e)
+            {
+                this.Log().Error("Exception: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + e);
+                throw new ApplicationException(
+                    "Oops!! Ocorreu algum erro ao tentar conectar ao serviço de notificar o estado dos RPSs no Smart. Por favor, verifique sua internet e tente novamente..." +
+                    Environment.NewLine + "Erro: " + e.Message, e
+                );
+            }
+
+        }
+
+        private void ResultadoConsultaLoteRps(string protocolo, string xml, string caminho)
+        {
+            var param = new System.Collections.Specialized.NameValueCollection
+            {
+                {"protocolo", protocolo},
+                {"xml", xml}
+            };
+
+            try
+            {
+                caminho += "?tipoOperacao=2";
+
+                var webCliente = new System.Net.WebClient();
+                byte[] bytes_resposta = webCliente.UploadValues(caminho, "POST", param);
+                ASCIIEncoding enc = new ASCIIEncoding();
+                string resposta = enc.GetString(bytes_resposta);
+            }
+            catch (System.Net.WebException we)
+            {
+                this.Log().Error("WebException: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + we);
+                throw new ApplicationException(
+                    "Oops!! O tempo limite de conexão ao serviço de notificar o estado dos RPSs no Smart expirou. Por favor, verifique sua internet e tente novamente..." +
+                    Environment.NewLine + "Erro: " + we.Message, we
+                );
+            }
+            catch (Exception e)
+            {
+                this.Log().Error("Exception: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + e);
+                throw new ApplicationException(
+                    "Oops!! Ocorreu algum erro ao tentar conectar ao serviço de notificar o estado dos RPSs no Smart. Por favor, verifique sua internet e tente novamente..." +
+                    Environment.NewLine + "Erro: " + e.Message, e
+                );
+            }
         }
 
         #endregion Methods

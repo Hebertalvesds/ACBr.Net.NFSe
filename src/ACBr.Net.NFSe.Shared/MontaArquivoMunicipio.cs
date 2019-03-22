@@ -16,7 +16,7 @@ namespace ACBr.Net.NFSe
             switch (codigoMunicipio)
             {
                 case 3143302:
-                    Pronim(rps, ref nfse);
+                    PronimV202(rps, ref nfse);
                     break;
                 case 3118601:
                     Ginfes(rps, ref nfse);
@@ -26,7 +26,7 @@ namespace ACBr.Net.NFSe
             }
         }
 
-        private static void Pronim(XElement rps, ref NotaFiscal nfse)
+        private static void PronimV202(XElement rps, ref NotaFiscal nfse)
         {
 
             var ns = rps.GetDefaultNamespace();
@@ -128,8 +128,7 @@ namespace ACBr.Net.NFSe
 
             var ns = rps.GetDefaultNamespace();
             var rInfo = XmlConstruct.GetElementInfo(rps);
-            var rpsAux = XmlConstruct.GetElementChild(rInfo, "Rps");
-            var identificacao = XmlConstruct.GetElementChild(rpsAux, "IdentificacaoRps");
+            var identificacao = XmlConstruct.GetElementChild(rInfo, "IdentificacaoRps");
             var servico = rInfo.Element(ns + "Servico");
             var valores = servico.Element(ns + "Valores");
             var prestador = rInfo.Element(ns + "Prestador");
@@ -139,23 +138,24 @@ namespace ACBr.Net.NFSe
             nfse.IdentificacaoRps.Numero = XmlConstruct.GetStringElement(identificacao, "Numero", true);
             nfse.IdentificacaoRps.Serie = XmlConstruct.GetStringElement(identificacao, "Serie", true);
             nfse.IdentificacaoRps.Tipo = XmlConstruct.GetTipo(XmlConstruct.GetIntElement(identificacao, "Tipo", true));
-            nfse.IdentificacaoRps.DataEmissao = DateTime.Parse(XmlConstruct.GetStringElement(rpsAux, "DataEmissao"));
             #endregion Rps Identificacao
 
-            nfse.Competencia = DateTime.Parse(XmlConstruct.GetStringElement(rInfo, "Competencia", true));
-
+            nfse.IdentificacaoRps.DataEmissao = DateTime.Parse(XmlConstruct.GetStringElement(rInfo, "DataEmissao"));
+            //No Ginfes vamos utilizar essa tag para comporo Natureza da Operação já que ambas são para o mesmo propósito!
+            nfse.NaturezaOperacao = XmlConstruct.GetNaturezaOperacao(rInfo);
+            nfse.IncentivadorCultural = XmlConstruct.GetIncentivoFiscalCultural(rInfo);
+             
             #region Servico
-            nfse.Servico.Valores.IssRetidoSimNao = XmlConstruct.GetSimNao(XmlConstruct.GetIntElement(servico, "IssRetido"));
+            //nfse.Servico.Valores.IssRetidoSimNao = XmlConstruct.GetSimNao(XmlConstruct.GetIntElement(servico, "IssRetido"));
             //nfse.Servico.ResponsavelRetencao = XmlConstruct.GetResponsavelRetencao(XmlConstruct.GetIntElement(servico, "ResponsavelRetencao"));
             nfse.Servico.ItemListaServico = XmlConstruct.GetStringElement(servico, "ItemListaServico", true);
-            nfse.Servico.CodigoCnae = XmlConstruct.GetStringElement(servico, "CodigoCnae");
+            //nfse.Servico.CodigoCnae = XmlConstruct.GetStringElement(servico, "CodigoCnae");
             nfse.Servico.CodigoTributacaoMunicipio = XmlConstruct.GetStringElement(servico, "CodigoTributacaoMunicipio");
             nfse.Servico.Discriminacao = XmlConstruct.GetStringElement(servico, "Discriminacao", true);
             nfse.Servico.CodigoMunicipio = XmlConstruct.GetIntElement(servico, "CodigoMunicipio");
-            nfse.Servico.CodigoPais = XmlConstruct.GetIntElement(servico, "CodigoPais");
-            nfse.Servico.ExigibilidadeIss = XmlConstruct.GetExigibilidadeISS(servico);
-            nfse.Servico.MunicipioIncidencia = XmlConstruct.GetIntElement(servico, "MunicipioIncidencia");
-            nfse.Servico.NumeroProcesso = XmlConstruct.GetStringElement(servico, "NumeroProcesso");
+            //nfse.Servico.CodigoPais = XmlConstruct.GetIntElement(servico, "CodigoPais");
+            //nfse.Servico.MunicipioIncidencia = XmlConstruct.GetIntElement(servico, "MunicipioIncidencia");
+            //nfse.Servico.NumeroProcesso = XmlConstruct.GetStringElement(servico, "NumeroProcesso");
 
             #region Valores
             nfse.Servico.Valores.ValorServicos = XmlConstruct.GetDecimalElement(valores, "ValorServicos", true);
@@ -165,11 +165,13 @@ namespace ACBr.Net.NFSe
             nfse.Servico.Valores.ValorInss = XmlConstruct.GetDecimalElement(valores, "ValorInss");
             nfse.Servico.Valores.ValorIr = XmlConstruct.GetDecimalElement(valores, "ValorIr");
             nfse.Servico.Valores.ValorCsll = XmlConstruct.GetDecimalElement(valores, "ValorCsll");
-            nfse.Servico.Valores.ValorIss = XmlConstruct.GetDecimalElement(valores, "ValorIss");
+            //nfse.Servico.Valores.ValorIss = XmlConstruct.GetDecimalElement(valores, "ValorIss");
+            nfse.Servico.Valores.IssRetidoSimNao = XmlConstruct.GetSimNao(XmlConstruct.GetIntElement(valores,"IssRetido"));
             nfse.Servico.Valores.ValorOutrasRetencoes = XmlConstruct.GetDecimalElement(valores, "OutrasRetencoes");
             nfse.Servico.Valores.Aliquota = XmlConstruct.GetDecimalElement(valores, "Aliquota");
-            nfse.Servico.Valores.DescontoCondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoCondicionado");
-            nfse.Servico.Valores.DescontoIncondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoIncondicionado");
+            nfse.Servico.Valores.BaseCalculo = XmlConstruct.GetDecimalElement(valores, "BaseCalculo");
+            //nfse.Servico.Valores.DescontoCondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoCondicionado");
+            //nfse.Servico.Valores.DescontoIncondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoIncondicionado");
             #endregion Valores
 
             #endregion Servico

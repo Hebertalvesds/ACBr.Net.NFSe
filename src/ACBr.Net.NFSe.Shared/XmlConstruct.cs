@@ -104,14 +104,53 @@ namespace ACBr.Net.NFSe
             }
         }
 
+        public static NaturezaOperacao GetNaturezaOperacao(XElement xElement)
+        {
+            if (xElement == null) return NaturezaOperacao.NT01;
+
+            int value = xElement.ElementAnyNs("NaturezaOperacao")?.GetValue<int>() ?? 0;
+
+            NaturezaOperacao natureza;
+
+            switch (value)
+            {
+                case 1:
+                    natureza = NaturezaOperacao.NT01;
+                    break;
+                case 2:
+                    natureza = NaturezaOperacao.NT02;
+                    break;
+                case 3:
+                    natureza = NaturezaOperacao.NT03;
+                    break;
+                case 4:
+                    natureza = NaturezaOperacao.NT04;
+                    break;
+                case 5:
+                    natureza = NaturezaOperacao.NT05;
+                    break;
+                case 6:
+                    natureza = NaturezaOperacao.NT06;
+                    break;
+                default:
+                    natureza = NaturezaOperacao.NT00;
+                    break;
+                    
+            }
+
+            return natureza;
+        }
+
         public static ExigibilidadeIss GetExigibilidadeISS(XElement xElement)
         {
             if (xElement == null) return ExigibilidadeIss.Exigivel;
 
             int value = xElement.ElementAnyNs("ExigibilidadeISS")?.GetValue<int>() ?? 0;
 
+
             ExigibilidadeIss exigibilidade;
 
+            //A TAG QUE CORRESPONDE NO GINFES É NATUREZA DA OPERAÇÃO
             switch (value)
             {
                 case 1:

@@ -33,10 +33,8 @@
             this.UriRetorno = new System.Windows.Forms.TextBox();
             this.btnIniciarProc = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
-            this.btnConsultarLote = new System.Windows.Forms.Button();
             this.lblUriEnvio = new System.Windows.Forms.Label();
             this.UriEnvio = new System.Windows.Forms.TextBox();
-            this.btnGerarEnviarLoteRps = new System.Windows.Forms.Button();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.rtLogResposta = new System.Windows.Forms.RichTextBox();
@@ -160,10 +158,8 @@
             this.tabPage1.Controls.Add(this.UriRetorno);
             this.tabPage1.Controls.Add(this.btnIniciarProc);
             this.tabPage1.Controls.Add(this.label16);
-            this.tabPage1.Controls.Add(this.btnConsultarLote);
             this.tabPage1.Controls.Add(this.lblUriEnvio);
             this.tabPage1.Controls.Add(this.UriEnvio);
-            this.tabPage1.Controls.Add(this.btnGerarEnviarLoteRps);
             this.tabPage1.Controls.Add(this.tabControl3);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -200,16 +196,6 @@
             this.label16.TabIndex = 27;
             this.label16.Text = "Caminho dos XML\'s Retorno *";
             // 
-            // btnConsultarLote
-            // 
-            this.btnConsultarLote.Location = new System.Drawing.Point(684, 132);
-            this.btnConsultarLote.Name = "btnConsultarLote";
-            this.btnConsultarLote.Size = new System.Drawing.Size(110, 23);
-            this.btnConsultarLote.TabIndex = 11;
-            this.btnConsultarLote.Text = "Consultar Lote";
-            this.btnConsultarLote.UseVisualStyleBackColor = true;
-            this.btnConsultarLote.Click += new System.EventHandler(this.btnConsultarLote_Click);
-            // 
             // lblUriEnvio
             // 
             this.lblUriEnvio.AutoSize = true;
@@ -225,16 +211,6 @@
             this.UriEnvio.Name = "UriEnvio";
             this.UriEnvio.Size = new System.Drawing.Size(558, 20);
             this.UriEnvio.TabIndex = 25;
-            // 
-            // btnGerarEnviarLoteRps
-            // 
-            this.btnGerarEnviarLoteRps.Location = new System.Drawing.Point(549, 132);
-            this.btnGerarEnviarLoteRps.Name = "btnGerarEnviarLoteRps";
-            this.btnGerarEnviarLoteRps.Size = new System.Drawing.Size(105, 23);
-            this.btnGerarEnviarLoteRps.TabIndex = 5;
-            this.btnGerarEnviarLoteRps.Text = "Enviar Lote RPS";
-            this.btnGerarEnviarLoteRps.UseVisualStyleBackColor = true;
-            this.btnGerarEnviarLoteRps.Click += new System.EventHandler(this.btnGerarEnviarLoteRps_Click);
             // 
             // tabControl3
             // 
@@ -1191,8 +1167,6 @@
 		private System.Windows.Forms.WebBrowser wbbRetorno;
 		private System.Windows.Forms.WebBrowser wbbDados;
 		private System.Windows.Forms.Button btnSalvarConfig;
-		private System.Windows.Forms.Button btnConsultarLote;
-		private System.Windows.Forms.Button btnGerarEnviarLoteRps;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
 		private System.Windows.Forms.Button btnDeletar;
