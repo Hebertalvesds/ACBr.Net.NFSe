@@ -10,7 +10,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             ClientCredentials.ServiceCertificate.Authentication.RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.Offline;
 
-            Endpoint.Binding = CustomBinding(Endpoint.Binding);
+            //Endpoint.Binding = CustomBinding(Endpoint.Binding);
         }
         #endregion Constructors
 

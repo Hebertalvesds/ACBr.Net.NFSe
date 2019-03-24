@@ -15,8 +15,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Starline.SmartNota.Util;
+using ACBr.Net.NFSe.Configuracao;
 using System.Xml;
 using System.Globalization;
+using ACBr.Net.NFSe.Demo.Configuracoes;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -26,10 +28,9 @@ namespace ACBr.Net.NFSe.Demo
 
         private ACBrNFSe acbrNFSe;
         private ACBrConfig config;
-
-        private const bool OBRIGATORIO = true;
-        private const bool NAOOBRIGATORIO = false;
-        
+        private Preferencias formPreferencias;
+        private string UriRetorno;
+        private string UriEnvio;
 
         #endregion Fields
 
@@ -38,7 +39,10 @@ namespace ACBr.Net.NFSe.Demo
         public FormMain()
         {
             InitializeComponent();
-            config = ACBrConfig.CreateOrLoad(Path.Combine(Application.StartupPath, "nfse.config"));
+            formPreferencias = new Preferencias();
+            var configPath = Application.StartupPath + @"\Configuracoes";
+            if (!Directory.Exists(configPath)) formPreferencias.Show();
+            config = ACBrConfig.CreateOrLoad(Path.Combine(configPath, "nfse.config"));
         }
 
         #endregion Constructors
@@ -50,15 +54,17 @@ namespace ACBr.Net.NFSe.Demo
         private void btnIniciarProc_Click(object sender, EventArgs e)
         {
             lblStatus.Text = "";
+            
             //Faz a leitura do arquivo de Envio ou Consulta de Lotes e Decide qual processo irá chamar
-            if (VerificaTextBox(UriEnvio))
+            if (UriEnvio.IsEmpty())
                 MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else if (VerificaTextBox(UriEnvio))
+            else if (UriRetorno.IsEmpty())
                 MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
             {
-                var uriEnvio = new UriBuilder(UriEnvio.Text);
-                var xml = XDocument.Parse(TWeb.FetchRps(uriEnvio.Uri));
+                this.Log().Info("Lendo Arquivos de: " + UriEnvio);
+                var url = new UriBuilder(UriEnvio);
+                var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
 
                 var root = xml.Root;
 
@@ -70,20 +76,12 @@ namespace ACBr.Net.NFSe.Demo
 
         }
 
-        private void btnFolderConfig_Click(object sender, EventArgs e)
-        {
-            ExecuteSafe(() =>
-            {
-                txtFolderConfig.Text = Helpers.SelectFolder();
-            });
-        }
-
         private void btnAbreConfig_Click(object sender, EventArgs e)
         {
             ExecuteSafe(() =>
             {
                 var lConfig = "";
-                var path = txtFolderConfig.Text ?? "C:";
+                var path = config.Get("CaminhoConfiguracoes", string.Empty);
                 ExecuteSafe(() =>
                 {
                     lConfig = Helpers.OpenFile("Arquivo de Configuração (*.config)|*.config*|Todos os arquivos|*.*", path, "Abrir");
@@ -99,24 +97,6 @@ namespace ACBr.Net.NFSe.Demo
         {
             //Salva o Arquivo de Configuração Default Sempre
             SaveConfig();
-
-            //Verifica se um especifíco será criado
-            if (txtFolderConfig.Text.IsEmpty())
-            {
-                MessageBox.Show("Caminho dos Arquivos de configurações na Aba Geral Ausente!", "Erro ao Salvar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (txtConfigName.Text.IsEmpty())
-            {
-                MessageBox.Show("Nome da Configuração Ausente!", "Erro ao Salvar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            SaveNewConfig();
-        }
-
-        private void btnGerarEnviarLoteRps_Click(object sender, EventArgs e)
-        {
-            
         }
 
         private void btnConsultarSituacao_Click(object sender, EventArgs e)
@@ -133,20 +113,6 @@ namespace ACBr.Net.NFSe.Demo
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
             });
-        }
-
-        private void btnConsultarLote_Click(object sender, EventArgs e)
-        {
-            if (VerificaTextBox(UriEnvio))
-                MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else if (VerificaTextBox(UriEnvio))
-                MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else
-            {
-                
-
-
-            }
         }
 
         private void btnConsultarNFSeRps_Click(object sender, EventArgs e)
@@ -191,22 +157,6 @@ namespace ACBr.Net.NFSe.Demo
                 var ret = acbrNFSe.CancelaNFSe(codigo, serie, motivo);
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
-            });
-        }
-
-        private void btnSelecionarSchema_Click(object sender, EventArgs e)
-        {
-            ExecuteSafe(() =>
-            {
-                txtSchemas.Text = Helpers.SelectFolder();
-            });
-        }
-
-        private void btnPathXml_Click(object sender, EventArgs e)
-        {
-            ExecuteSafe(() =>
-            {
-                txtPathXml.Text = Helpers.SelectFolder();
             });
         }
 
@@ -274,6 +224,9 @@ namespace ACBr.Net.NFSe.Demo
                 ProviderManager.Municipios.Clear();
                 ProviderManager.Municipios.AddRange(municipios);
                 ProviderManager.Save(Path.Combine(path, "Municipios.nfse"));
+
+                var pathMunicipios = config.Get("CaminhoArqCidades", string.Empty);
+                ProviderManager.Save(Path.Combine(pathMunicipios, "Municipios.nfse"));
             });
         }
 
@@ -327,41 +280,6 @@ namespace ACBr.Net.NFSe.Demo
             acbrNFSe.Configuracoes.PrestadorPadrao.RazaoSocial = txtRazaoSocial.Text;
         }
 
-        private void txtFantasia_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.NomeFantasia = txtFantasia.Text;
-        }
-
-        private void txtFone_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.DadosContato.Telefone = txtFone.Text;
-        }
-
-        private void txtCEP_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Cep = txtCEP.Text;
-        }
-
-        private void txtEndereco_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Logradouro = txtEndereco.Text;
-        }
-
-        private void txtNumero_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Numero = txtNumero.Text;
-        }
-
-        private void txtComplemento_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Complemento = txtComplemento.Text;
-        }
-
-        private void txtBairro_TextChanged(object sender, EventArgs e)
-        {
-            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Bairro = txtBairro.Text;
-        }
-
         private void cmbCidades_SelectedValueChanged(object sender, EventArgs e)
         {
             var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
@@ -404,22 +322,22 @@ namespace ACBr.Net.NFSe.Demo
 
         private void txtSchemas_TextChanged(object sender, EventArgs e)
         {
-            acbrNFSe.Configuracoes.Arquivos.PathSchemas = txtSchemas.Text;
+            acbrNFSe.Configuracoes.Arquivos.PathSchemas = config.Get("CaminhoSchemas", string.Empty);
         }
 
         private void chkSalvarArquivos_CheckedChanged(object sender, EventArgs e)
         {
-            acbrNFSe.Configuracoes.Geral.Salvar = chkSalvarArquivos.Checked;
+            //acbrNFSe.Configuracoes.Geral.Salvar = chkSalvarArquivos.Checked;
         }
 
         private void txtArquivoCidades_Click(object sender, EventArgs e)
         {
-            acbrNFSe.Configuracoes.Arquivos.ArquivoServicos = txtArquivoCidades.Text;
+            acbrNFSe.Configuracoes.Arquivos.ArquivoServicos = config.Get("CaminhoArqCidades", string.Empty);
         }
 
         private void txtPathXml_TextChanged(object sender, EventArgs e)
         {
-            acbrNFSe.Configuracoes.Arquivos.PathSalvar = txtPathXml.Text;
+            acbrNFSe.Configuracoes.Arquivos.PathSalvar = config.Get("CaminhoNotas",string.Empty);
         }
 
         private void txtArquivoCidades_TextChanged(object sender, EventArgs e)
@@ -446,6 +364,14 @@ namespace ACBr.Net.NFSe.Demo
             cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Homologacao);
             LoadData();
             LoadConfig();
+
+            var municipios = lstMunicipios.Items.Cast<ListViewItem>().Select(x => (ACBrMunicipioNFSe)x.Tag);
+
+            ProviderManager.Municipios.Clear();
+            ProviderManager.Municipios.AddRange(municipios);
+
+            var pathMunicipios = config.Get("CaminhoArqCidades", string.Empty);
+            ProviderManager.Save(Path.Combine(pathMunicipios, "Municipios.nfse"));
         }
 
         #endregion Overrides
@@ -518,7 +444,7 @@ namespace ACBr.Net.NFSe.Demo
                 if (arquivo.IsEmpty()) return;
 
                 ProviderManager.Load(arquivo);
-                txtArquivoCidades.Text = arquivo;
+                
                 LoadData();
             });
         }
@@ -568,8 +494,11 @@ namespace ACBr.Net.NFSe.Demo
 
         private void LoadConfig()
         {
+            UriEnvio = config.Get("UriEnvio", string.Empty);
+            UriRetorno = config.Get("UriRetorno", string.Empty);
+
             var cidades = config.Get("CaminhoArqCidades", string.Empty);
-            txtArquivoCidades.Text = cidades;
+            
             if (!cidades.IsEmpty()) LoadMunicipios(cidades);
 
             var cnpj = config.Get("PrestadorCPFCNPJ", string.Empty);
@@ -579,16 +508,9 @@ namespace ACBr.Net.NFSe.Demo
             }
 
             txtConfigName.Text = !config.Get("UltimaConfiguracao", String.Empty).IsEmpty() ? config.Get("UltimaConfiguracao", String.Empty) : config.Get("NomeConfig", String.Empty);
-            txtFolderConfig.Text = config.Get("CaminhoConfiguracoes", String.Empty);
+            
             txtIM.Text = config.Get("PrestadorIM", string.Empty);
             txtRazaoSocial.Text = config.Get("PrestadorRazaoSocial", string.Empty);
-            txtFantasia.Text = config.Get("PrestadorFantasia", string.Empty);
-            txtFone.Text = config.Get("PrestadorFone", string.Empty);
-            txtCEP.Text = config.Get("PrestadorCEP", string.Empty);
-            txtEndereco.Text = config.Get("PrestadorEndereco", string.Empty);
-            txtNumero.Text = config.Get("PrestadorNumero", string.Empty);
-            txtComplemento.Text = config.Get("PrestadorComplemento", string.Empty);
-            txtBairro.Text = config.Get("PrestadorBairro", string.Empty);
 
             var codMunicipio = config.Get("Municipio", 0);
             if (codMunicipio > 0)
@@ -604,29 +526,17 @@ namespace ACBr.Net.NFSe.Demo
 
             txtCertificado.Text = config.Get("Certificado", string.Empty);
             txtSenha.Text = config.Get("Senha", string.Empty);
-            txtNumeroSerie.Text = config.Get("NumeroSerie", string.Empty);
-
-            UriEnvio.Text = config.Get("UriEnvio", string.Empty);
-            UriRetorno.Text = config.Get("UriRetorno", string.Empty);
-            
+            txtNumeroSerie.Text = config.Get("NumeroSerie", string.Empty);            
         }
 
         private void SaveConfig()
         {
             //Salva na Configuração Default
-            config.Set("CaminhoConfiguracoes", txtFolderConfig.Text);
             config.Set("UltimaConfiguracao", txtConfigName.Text);
 
             config.Set("PrestadorCPFCNPJ", txtCPFCNPJ.Text.OnlyNumbers());
             config.Set("PrestadorIM", txtIM.Text.OnlyNumbers());
             config.Set("PrestadorRazaoSocial", txtRazaoSocial.Text);
-            config.Set("PrestadorFantasia", txtFantasia.Text);
-            config.Set("PrestadorFone", txtFone.Text);
-            config.Set("PrestadorCEP", txtCEP.Text);
-            config.Set("PrestadorEndereco", txtEndereco.Text);
-            config.Set("PrestadorNumero", txtNumero.Text);
-            config.Set("PrestadorComplemento", txtComplemento.Text);
-            config.Set("PrestadorBairro", txtBairro.Text);
 
             config.Set("Municipio", txtCodCidade.Text.OnlyNumbers());
 
@@ -636,9 +546,9 @@ namespace ACBr.Net.NFSe.Demo
             config.Set("Senha", txtSenha.Text);
             config.Set("NumeroSerie", txtNumeroSerie.Text);
 
-            config.Set("CaminhoArqCidades", txtArquivoCidades.Text);
-            config.Set("UriEnvio", UriEnvio.Text);
-            config.Set("UriRetorno", UriRetorno.Text);
+            //config.Set("CaminhoArqCidades", txtArquivoCidades.Text);
+            config.Set("UriEnvio", UriEnvio);
+            config.Set("UriRetorno", UriRetorno);
             
             config.Save();
         }
@@ -674,11 +584,6 @@ namespace ACBr.Net.NFSe.Demo
             return lote;
         }
 
-        private NFSeSimNao converteSimNao(int original)
-        {
-            return (original == 1) ? NFSeSimNao.Sim : NFSeSimNao.Nao ;
-        }
-
         private void EnviarLoteRpsEnvio(XDocument xxml)
         {
             ExecuteSafe(() =>
@@ -696,9 +601,9 @@ namespace ACBr.Net.NFSe.Demo
                 var ret = acbrNFSe.Enviar(numero);
                 if (ret.Sucesso)
                 {
-                    this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno.Text);
+                    this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno);
                     var numeroLote = ret.NumeroLote;
-                    ResultadoEnvioLoteRps(numeroLote, ret.XmlRetorno, UriRetorno.Text);
+                    ResultadoEnvioLoteRps(numeroLote, ret.XmlRetorno, UriRetorno);
                 }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
@@ -716,46 +621,12 @@ namespace ACBr.Net.NFSe.Demo
                 var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
                 if (ret.Sucesso)
                 {
-                    this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno.Text);
-                    ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno.Text);
+                    this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
+                    ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno);
                 }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
             });
-        }
-
-        private void SaveNewConfig()
-        {
-
-            var specificConfig = ACBrConfig.CreateOrLoad(Path.Combine(txtFolderConfig.Text, txtConfigName.Text + ".config"));
-
-            specificConfig.Set("CaminhoConfiguracoes", txtFolderConfig.Text);
-            specificConfig.Set("NomeConfig", txtConfigName.Text);
-            specificConfig.Set("PrestadorCPFCNPJ", txtCPFCNPJ.Text.OnlyNumbers());
-            specificConfig.Set("PrestadorIM", txtIM.Text.OnlyNumbers());
-            specificConfig.Set("PrestadorRazaoSocial", txtRazaoSocial.Text);
-            specificConfig.Set("PrestadorFantasia", txtFantasia.Text);
-            specificConfig.Set("PrestadorFone", txtFone.Text);
-            specificConfig.Set("PrestadorCEP", txtCEP.Text);
-            specificConfig.Set("PrestadorEndereco", txtEndereco.Text);
-            specificConfig.Set("PrestadorNumero", txtNumero.Text);
-            specificConfig.Set("PrestadorComplemento", txtComplemento.Text);
-            specificConfig.Set("PrestadorBairro", txtBairro.Text);
-
-            specificConfig.Set("Municipio", txtCodCidade.Text.OnlyNumbers());
-
-            specificConfig.Set("Ambiente", cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>());
-
-            specificConfig.Set("Certificado", txtCertificado.Text);
-            specificConfig.Set("Senha", txtSenha.Text);
-            specificConfig.Set("NumeroSerie", txtNumeroSerie.Text);
-
-            specificConfig.Set("CaminhoArqCidades", txtArquivoCidades.Text);
-            specificConfig.Set("UriEnvio", UriEnvio.Text);
-            specificConfig.Set("UriRetorno", UriRetorno.Text);
-
-            specificConfig.Save();
-
         }
 
         private void ResultadoEnvioLoteRps(string lote, string xml, string caminho)
@@ -833,7 +704,7 @@ namespace ACBr.Net.NFSe.Demo
 
         private void salvarEditarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            new FormNova().Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -844,16 +715,16 @@ namespace ACBr.Net.NFSe.Demo
             var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
             if (ret.Sucesso)
             {
-                this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno.Text);
-                ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno.Text);
+                this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
+                ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno);
             }
             wbbDados.LoadXml(ret.XmlEnvio);
             wbbResposta.LoadXml(ret.XmlRetorno);
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        private void preferênciasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            new Preferencias().Show();
         }
     }
 }

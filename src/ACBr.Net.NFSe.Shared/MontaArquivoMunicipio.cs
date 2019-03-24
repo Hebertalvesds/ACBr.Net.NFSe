@@ -165,11 +165,12 @@ namespace ACBr.Net.NFSe
             nfse.Servico.Valores.ValorInss = XmlConstruct.GetDecimalElement(valores, "ValorInss");
             nfse.Servico.Valores.ValorIr = XmlConstruct.GetDecimalElement(valores, "ValorIr");
             nfse.Servico.Valores.ValorCsll = XmlConstruct.GetDecimalElement(valores, "ValorCsll");
-            //nfse.Servico.Valores.ValorIss = XmlConstruct.GetDecimalElement(valores, "ValorIss");
             nfse.Servico.Valores.IssRetidoSimNao = XmlConstruct.GetSimNao(XmlConstruct.GetIntElement(valores,"IssRetido"));
             nfse.Servico.Valores.ValorOutrasRetencoes = XmlConstruct.GetDecimalElement(valores, "OutrasRetencoes");
-            nfse.Servico.Valores.Aliquota = XmlConstruct.GetDecimalElement(valores, "Aliquota");
+            nfse.Servico.Valores.Aliquota = XmlConstruct.Aliquota(nfse.Servico.CodigoTributacaoMunicipio,"Contagem");
             nfse.Servico.Valores.BaseCalculo = XmlConstruct.GetDecimalElement(valores, "BaseCalculo");
+            nfse.Servico.Valores.ValorIss = nfse.Servico.Valores.BaseCalculo * (nfse.Servico.Valores.Aliquota/100);
+            nfse.Servico.Valores.ValorLiquidoNfse = ValorLiquido(nfse);
             //nfse.Servico.Valores.DescontoCondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoCondicionado");
             //nfse.Servico.Valores.DescontoIncondicionado = XmlConstruct.GetDecimalElement(valores, "DescontoIncondicionado");
             #endregion Valores
@@ -220,6 +221,11 @@ namespace ACBr.Net.NFSe
 
             }
 
+        }
+
+        private static decimal ValorLiquido(NotaFiscal nfse)
+        {
+            return nfse.Servico.Valores.ValorServicos - nfse.Servico.Valores.ValorPis - nfse.Servico.Valores.ValorCofins - nfse.Servico.Valores.ValorInss - nfse.Servico.Valores.ValorIr - nfse.Servico.Valores.ValorCsll - nfse.Servico.Valores.ValorIssRetido - nfse.Servico.Valores.DescontoCondicionado - nfse.Servico.Valores.DescontoIncondicionado;
         }
     }
 }
