@@ -19,6 +19,7 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
         #region Fields
         private ACBrNFSe acbrNFSe;
         private ACBrConfig config;
+        private ACBrConfig editConfig;
         private string ConfigPath;
         #endregion Fields
 
@@ -35,6 +36,47 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
             var municipioArq = config.Get("CaminhoArqCidades", string.Empty) + @"\Municipios.nfse";
 
             if (!municipioArq.IsEmpty()) LoadMunicipios(municipioArq);
+            cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Producao);
+        }
+
+        public FormNova(string Configuracao) : this()
+        {
+            editConfig = ACBrConfig.CreateOrLoad(Configuracao);
+
+            txtConfigName.Text = editConfig.Get("NomeConfig", string.Empty);
+            txtCPFCNPJ.Text = editConfig.Get("PrestadorCPFCNPJ", string.Empty);
+            txtIM.Text = editConfig.Get("PrestadorIM", string.Empty);
+            txtRazaoSocial.Text = editConfig.Get("PrestadorRazaoSocial", string.Empty);
+            txtFantasia.Text = editConfig.Get("PrestadorFantasia", string.Empty);
+            txtFone.Text = editConfig.Get("PrestadorFone", string.Empty);
+            txtCEP.Text = editConfig.Get("PrestadorCEP", string.Empty);
+            txtBairro.Text = editConfig.Get("PrestadorBairro", string.Empty);
+            txtEndereco.Text = editConfig.Get("PrestadorEndereco", string.Empty);
+            txtNumero.Text = editConfig.Get("PrestadorNumero", string.Empty);
+            txtComplemento.Text = editConfig.Get("PrestadorComplemento", string.Empty);
+
+            var codMunicipio = editConfig.Get("Municipio", 0);
+            if (codMunicipio > 0)
+            {
+                var municipio = ProviderManager.Municipios.SingleOrDefault(m => m.Codigo == codMunicipio);
+                cmbCidades.SelectedItem = municipio;
+            }
+            txtSenha.Text = editConfig.Get("Senha", string.Empty);
+            txtNumeroSerie.Text = editConfig.Get("NumeroSerie", string.Empty);
+            UriEnvio.Text = editConfig.Get("UriEnvio", string.Empty);
+            UriRetorno.Text = editConfig.Get("UriRetorno", string.Empty);
+
+            var ambiente = editConfig.Get("Ambiente", DFeTipoAmbiente.Producao);
+
+            switch (ambiente)
+            {
+                case DFeTipoAmbiente.Producao:
+                    cmbAmbiente.SelectedIndex = 0;
+                    break;
+                default:
+                    cmbAmbiente.SelectedIndex = 1;
+                    break;
+            }
         }
         #endregion Constructors
         private void ExecuteSafe(Action action)
@@ -68,7 +110,7 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
                 specificConfig.Set("PrestadorBairro", txtBairro.Text);
 
                 specificConfig.Set("Municipio", txtCodCidade.Text.OnlyNumbers());
-
+                specificConfig.Set("Ambiente", cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>());
                 //specificConfig.Set("Ambiente", cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>());
 
                 specificConfig.Set("Certificado", txtCertificado.Text);
@@ -80,7 +122,7 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
                 specificConfig.Set("UriRetorno", UriRetorno.Text);
 
                 specificConfig.Save();
-
+                
                 return true;
             }
 
@@ -276,5 +318,6 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
             acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.CodigoMunicipio = municipio.Codigo;
             acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Uf = municipio.UF.ToString();
         }
+
     }
 }

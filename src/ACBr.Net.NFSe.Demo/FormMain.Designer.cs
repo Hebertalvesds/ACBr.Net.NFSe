@@ -28,15 +28,14 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnIniciarProc = new System.Windows.Forms.Button();
             this.tabControl3 = new System.Windows.Forms.TabControl();
-            this.tabPage9 = new System.Windows.Forms.TabPage();
-            this.wbbResposta = new System.Windows.Forms.WebBrowser();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.wbbResposta = new System.Windows.Forms.WebBrowser();
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.wbbNFSe = new System.Windows.Forms.WebBrowser();
             this.tabPage12 = new System.Windows.Forms.TabPage();
@@ -46,15 +45,12 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cmbAmbiente = new System.Windows.Forms.ComboBox();
-            this.btnGetCertificate = new System.Windows.Forms.Button();
             this.txtNumeroSerie = new System.Windows.Forms.TextBox();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.txtCertificado = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.btnFindCertificate = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnAbreConfig = new System.Windows.Forms.Button();
             this.txtConfigName = new System.Windows.Forms.TextBox();
             this.txtCodSiafi = new System.Windows.Forms.TextBox();
             this.txtCodCidade = new System.Windows.Forms.TextBox();
@@ -86,14 +82,20 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnIniciarProc = new System.Windows.Forms.Button();
+            this.btnGetCertificate = new System.Windows.Forms.Button();
+            this.btnFindCertificate = new System.Windows.Forms.Button();
+            this.btnAbreConfig = new System.Windows.Forms.Button();
             this.configuraçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salvarEditarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferênciasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editarConfiguraçãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl3.SuspendLayout();
-            this.tabPage9.SuspendLayout();
             this.tabPage10.SuspendLayout();
+            this.tabPage9.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.tabPage12.SuspendLayout();
             this.tabPage13.SuspendLayout();
@@ -128,34 +130,6 @@
             this.tabPage1.Text = "NFSe";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(682, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(165, 39);
-            this.button1.TabIndex = 29;
-            this.button1.Text = "Consulta de Lote";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // btnIniciarProc
-            // 
-            this.btnIniciarProc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnIniciarProc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIniciarProc.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIniciarProc.ForeColor = System.Drawing.Color.White;
-            this.btnIniciarProc.Location = new System.Drawing.Point(293, 6);
-            this.btnIniciarProc.Name = "btnIniciarProc";
-            this.btnIniciarProc.Size = new System.Drawing.Size(227, 39);
-            this.btnIniciarProc.TabIndex = 12;
-            this.btnIniciarProc.Text = "Iniciar Processamento";
-            this.btnIniciarProc.UseVisualStyleBackColor = false;
-            this.btnIniciarProc.Click += new System.EventHandler(this.btnIniciarProc_Click);
-            // 
             // tabControl3
             // 
             this.tabControl3.Controls.Add(this.tabPage10);
@@ -165,10 +139,36 @@
             this.tabControl3.Controls.Add(this.tabPage13);
             this.tabControl3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl3.Location = new System.Drawing.Point(286, 51);
+            this.tabControl3.MaximumSize = new System.Drawing.Size(568, 445);
+            this.tabControl3.Multiline = true;
             this.tabControl3.Name = "tabControl3";
             this.tabControl3.SelectedIndex = 0;
             this.tabControl3.Size = new System.Drawing.Size(568, 445);
             this.tabControl3.TabIndex = 2;
+            // 
+            // tabPage10
+            // 
+            this.tabPage10.Controls.Add(this.rtbLog);
+            this.tabPage10.Location = new System.Drawing.Point(4, 22);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage10.Size = new System.Drawing.Size(560, 419);
+            this.tabPage10.TabIndex = 2;
+            this.tabPage10.Text = "Log";
+            this.tabPage10.UseVisualStyleBackColor = true;
+            // 
+            // rtbLog
+            // 
+            this.rtbLog.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.rtbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbLog.Location = new System.Drawing.Point(3, 3);
+            this.rtbLog.Name = "rtbLog";
+            this.rtbLog.ReadOnly = true;
+            this.rtbLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.rtbLog.Size = new System.Drawing.Size(554, 413);
+            this.rtbLog.TabIndex = 0;
+            this.rtbLog.Text = "";
             // 
             // tabPage9
             // 
@@ -189,28 +189,6 @@
             this.wbbResposta.Name = "wbbResposta";
             this.wbbResposta.Size = new System.Drawing.Size(554, 413);
             this.wbbResposta.TabIndex = 1;
-            // 
-            // tabPage10
-            // 
-            this.tabPage10.Controls.Add(this.rtbLog);
-            this.tabPage10.Location = new System.Drawing.Point(4, 22);
-            this.tabPage10.Name = "tabPage10";
-            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage10.Size = new System.Drawing.Size(560, 419);
-            this.tabPage10.TabIndex = 2;
-            this.tabPage10.Text = "Log";
-            this.tabPage10.UseVisualStyleBackColor = true;
-            // 
-            // rtbLog
-            // 
-            this.rtbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbLog.Location = new System.Drawing.Point(3, 3);
-            this.rtbLog.Name = "rtbLog";
-            this.rtbLog.ReadOnly = true;
-            this.rtbLog.Size = new System.Drawing.Size(554, 413);
-            this.rtbLog.TabIndex = 0;
-            this.rtbLog.Text = "";
             // 
             // tabPage11
             // 
@@ -312,7 +290,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 334);
+            this.label14.Location = new System.Drawing.Point(6, 366);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(51, 13);
             this.label14.TabIndex = 84;
@@ -321,51 +299,46 @@
             // cmbAmbiente
             // 
             this.cmbAmbiente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAmbiente.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAmbiente.FormattingEnabled = true;
-            this.cmbAmbiente.Location = new System.Drawing.Point(6, 350);
+            this.cmbAmbiente.Location = new System.Drawing.Point(6, 382);
             this.cmbAmbiente.Name = "cmbAmbiente";
-            this.cmbAmbiente.Size = new System.Drawing.Size(256, 21);
+            this.cmbAmbiente.Size = new System.Drawing.Size(256, 26);
             this.cmbAmbiente.TabIndex = 83;
-            // 
-            // btnGetCertificate
-            // 
-            this.btnGetCertificate.Location = new System.Drawing.Point(239, 311);
-            this.btnGetCertificate.Name = "btnGetCertificate";
-            this.btnGetCertificate.Size = new System.Drawing.Size(24, 20);
-            this.btnGetCertificate.TabIndex = 80;
-            this.btnGetCertificate.Text = "...";
-            this.btnGetCertificate.UseVisualStyleBackColor = true;
             // 
             // txtNumeroSerie
             // 
             this.txtNumeroSerie.Enabled = false;
-            this.txtNumeroSerie.Location = new System.Drawing.Point(6, 311);
+            this.txtNumeroSerie.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNumeroSerie.Location = new System.Drawing.Point(6, 339);
             this.txtNumeroSerie.Name = "txtNumeroSerie";
-            this.txtNumeroSerie.Size = new System.Drawing.Size(227, 20);
+            this.txtNumeroSerie.Size = new System.Drawing.Size(227, 24);
             this.txtNumeroSerie.TabIndex = 82;
             // 
             // txtSenha
             // 
             this.txtSenha.Enabled = false;
-            this.txtSenha.Location = new System.Drawing.Point(6, 272);
+            this.txtSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.Location = new System.Drawing.Point(6, 296);
             this.txtSenha.MaxLength = 30;
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.PasswordChar = '*';
-            this.txtSenha.Size = new System.Drawing.Size(257, 20);
+            this.txtSenha.Size = new System.Drawing.Size(257, 24);
             this.txtSenha.TabIndex = 78;
             // 
             // txtCertificado
             // 
             this.txtCertificado.Enabled = false;
-            this.txtCertificado.Location = new System.Drawing.Point(6, 233);
+            this.txtCertificado.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCertificado.Location = new System.Drawing.Point(6, 253);
             this.txtCertificado.Name = "txtCertificado";
-            this.txtCertificado.Size = new System.Drawing.Size(227, 20);
+            this.txtCertificado.Size = new System.Drawing.Size(227, 24);
             this.txtCertificado.TabIndex = 77;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 295);
+            this.label11.Location = new System.Drawing.Point(6, 323);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(86, 13);
             this.label11.TabIndex = 81;
@@ -374,106 +347,91 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 256);
+            this.label10.Location = new System.Drawing.Point(6, 280);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(38, 13);
             this.label10.TabIndex = 79;
             this.label10.Text = "Senha";
             // 
-            // btnFindCertificate
-            // 
-            this.btnFindCertificate.Location = new System.Drawing.Point(239, 233);
-            this.btnFindCertificate.Name = "btnFindCertificate";
-            this.btnFindCertificate.Size = new System.Drawing.Size(24, 20);
-            this.btnFindCertificate.TabIndex = 75;
-            this.btnFindCertificate.Text = "...";
-            this.btnFindCertificate.UseVisualStyleBackColor = true;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 217);
+            this.label9.Location = new System.Drawing.Point(6, 237);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(48, 13);
             this.label9.TabIndex = 76;
             this.label9.Text = "Caminho";
             // 
-            // btnAbreConfig
-            // 
-            this.btnAbreConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAbreConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbreConfig.ForeColor = System.Drawing.Color.White;
-            this.btnAbreConfig.Location = new System.Drawing.Point(216, 35);
-            this.btnAbreConfig.Name = "btnAbreConfig";
-            this.btnAbreConfig.Size = new System.Drawing.Size(47, 20);
-            this.btnAbreConfig.TabIndex = 74;
-            this.btnAbreConfig.Text = "Abrir";
-            this.btnAbreConfig.UseVisualStyleBackColor = true;
-            this.btnAbreConfig.Click += new System.EventHandler(this.btnAbreConfig_Click);
-            // 
             // txtConfigName
             // 
+            this.txtConfigName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConfigName.Location = new System.Drawing.Point(6, 36);
             this.txtConfigName.Name = "txtConfigName";
-            this.txtConfigName.Size = new System.Drawing.Size(204, 20);
+            this.txtConfigName.Size = new System.Drawing.Size(204, 24);
             this.txtConfigName.TabIndex = 73;
             // 
             // txtCodSiafi
             // 
             this.txtCodSiafi.BackColor = System.Drawing.Color.White;
             this.txtCodSiafi.Enabled = false;
-            this.txtCodSiafi.Location = new System.Drawing.Point(137, 194);
+            this.txtCodSiafi.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodSiafi.Location = new System.Drawing.Point(137, 210);
             this.txtCodSiafi.MaxLength = 20;
             this.txtCodSiafi.Name = "txtCodSiafi";
             this.txtCodSiafi.ReadOnly = true;
-            this.txtCodSiafi.Size = new System.Drawing.Size(125, 20);
+            this.txtCodSiafi.Size = new System.Drawing.Size(125, 24);
             this.txtCodSiafi.TabIndex = 70;
             // 
             // txtCodCidade
             // 
             this.txtCodCidade.BackColor = System.Drawing.Color.White;
             this.txtCodCidade.Enabled = false;
-            this.txtCodCidade.Location = new System.Drawing.Point(6, 194);
+            this.txtCodCidade.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodCidade.Location = new System.Drawing.Point(6, 210);
             this.txtCodCidade.MaxLength = 20;
             this.txtCodCidade.Name = "txtCodCidade";
             this.txtCodCidade.ReadOnly = true;
-            this.txtCodCidade.Size = new System.Drawing.Size(125, 20);
+            this.txtCodCidade.Size = new System.Drawing.Size(125, 24);
             this.txtCodCidade.TabIndex = 69;
             // 
             // txtUf
             // 
             this.txtUf.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtUf.Enabled = false;
+            this.txtUf.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUf.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.txtUf.Location = new System.Drawing.Point(221, 155);
+            this.txtUf.Location = new System.Drawing.Point(221, 166);
             this.txtUf.MaxLength = 2;
             this.txtUf.Name = "txtUf";
             this.txtUf.ReadOnly = true;
-            this.txtUf.Size = new System.Drawing.Size(41, 20);
+            this.txtUf.Size = new System.Drawing.Size(41, 24);
             this.txtUf.TabIndex = 66;
             // 
             // txtRazaoSocial
             // 
             this.txtRazaoSocial.Enabled = false;
-            this.txtRazaoSocial.Location = new System.Drawing.Point(6, 115);
+            this.txtRazaoSocial.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRazaoSocial.Location = new System.Drawing.Point(6, 122);
             this.txtRazaoSocial.Name = "txtRazaoSocial";
-            this.txtRazaoSocial.Size = new System.Drawing.Size(256, 20);
+            this.txtRazaoSocial.Size = new System.Drawing.Size(256, 24);
             this.txtRazaoSocial.TabIndex = 63;
             // 
             // txtIM
             // 
             this.txtIM.Enabled = false;
-            this.txtIM.Location = new System.Drawing.Point(137, 76);
+            this.txtIM.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtIM.Location = new System.Drawing.Point(137, 79);
             this.txtIM.Name = "txtIM";
-            this.txtIM.Size = new System.Drawing.Size(125, 20);
+            this.txtIM.Size = new System.Drawing.Size(125, 24);
             this.txtIM.TabIndex = 60;
             // 
             // txtCPFCNPJ
             // 
             this.txtCPFCNPJ.Enabled = false;
-            this.txtCPFCNPJ.Location = new System.Drawing.Point(6, 76);
+            this.txtCPFCNPJ.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCPFCNPJ.Location = new System.Drawing.Point(6, 79);
             this.txtCPFCNPJ.Name = "txtCPFCNPJ";
-            this.txtCPFCNPJ.Size = new System.Drawing.Size(125, 20);
+            this.txtCPFCNPJ.Size = new System.Drawing.Size(125, 24);
             this.txtCPFCNPJ.TabIndex = 59;
             // 
             // label17
@@ -488,7 +446,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(134, 178);
+            this.label7.Location = new System.Drawing.Point(134, 194);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 13);
             this.label7.TabIndex = 71;
@@ -497,7 +455,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 178);
+            this.label8.Location = new System.Drawing.Point(6, 194);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(65, 13);
             this.label8.TabIndex = 68;
@@ -506,7 +464,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(218, 138);
+            this.label6.Location = new System.Drawing.Point(218, 149);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(21, 13);
             this.label6.TabIndex = 67;
@@ -515,7 +473,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 138);
+            this.label5.Location = new System.Drawing.Point(6, 149);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(40, 13);
             this.label5.TabIndex = 65;
@@ -525,16 +483,17 @@
             // 
             this.cmbCidades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCidades.Enabled = false;
+            this.cmbCidades.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbCidades.FormattingEnabled = true;
-            this.cmbCidades.Location = new System.Drawing.Point(6, 154);
+            this.cmbCidades.Location = new System.Drawing.Point(6, 165);
             this.cmbCidades.Name = "cmbCidades";
-            this.cmbCidades.Size = new System.Drawing.Size(206, 21);
+            this.cmbCidades.Size = new System.Drawing.Size(206, 26);
             this.cmbCidades.TabIndex = 64;
             // 
             // lblRazaoSocial
             // 
             this.lblRazaoSocial.AutoSize = true;
-            this.lblRazaoSocial.Location = new System.Drawing.Point(6, 99);
+            this.lblRazaoSocial.Location = new System.Drawing.Point(6, 106);
             this.lblRazaoSocial.Name = "lblRazaoSocial";
             this.lblRazaoSocial.Size = new System.Drawing.Size(70, 13);
             this.lblRazaoSocial.TabIndex = 62;
@@ -543,7 +502,7 @@
             // lblIM
             // 
             this.lblIM.AutoSize = true;
-            this.lblIM.Location = new System.Drawing.Point(134, 60);
+            this.lblIM.Location = new System.Drawing.Point(134, 63);
             this.lblIM.Name = "lblIM";
             this.lblIM.Size = new System.Drawing.Size(98, 13);
             this.lblIM.TabIndex = 61;
@@ -552,7 +511,7 @@
             // lblCNPJ
             // 
             this.lblCNPJ.AutoSize = true;
-            this.lblCNPJ.Location = new System.Drawing.Point(6, 60);
+            this.lblCNPJ.Location = new System.Drawing.Point(6, 63);
             this.lblCNPJ.Name = "lblCNPJ";
             this.lblCNPJ.Size = new System.Drawing.Size(34, 13);
             this.lblCNPJ.TabIndex = 58;
@@ -697,6 +656,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configuraçõesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -705,28 +665,123 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
+            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.button1.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.saving_book;
+            this.button1.Location = new System.Drawing.Point(682, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(169, 39);
+            this.button1.TabIndex = 29;
+            this.button1.Text = "Consulta Lote";
+            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnIniciarProc
+            // 
+            this.btnIniciarProc.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnIniciarProc.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnIniciarProc.FlatAppearance.BorderSize = 0;
+            this.btnIniciarProc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIniciarProc.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIniciarProc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnIniciarProc.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.process;
+            this.btnIniciarProc.Location = new System.Drawing.Point(293, 6);
+            this.btnIniciarProc.Name = "btnIniciarProc";
+            this.btnIniciarProc.Size = new System.Drawing.Size(145, 39);
+            this.btnIniciarProc.TabIndex = 12;
+            this.btnIniciarProc.Text = "Processar";
+            this.btnIniciarProc.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnIniciarProc.UseVisualStyleBackColor = false;
+            this.btnIniciarProc.Click += new System.EventHandler(this.btnIniciarProc_Click);
+            // 
+            // btnGetCertificate
+            // 
+            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
+            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
+            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetCertificate.ForeColor = System.Drawing.Color.White;
+            this.btnGetCertificate.Location = new System.Drawing.Point(239, 339);
+            this.btnGetCertificate.Name = "btnGetCertificate";
+            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnGetCertificate.TabIndex = 80;
+            this.btnGetCertificate.UseVisualStyleBackColor = false;
+            // 
+            // btnFindCertificate
+            // 
+            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
+            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
+            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFindCertificate.ForeColor = System.Drawing.Color.White;
+            this.btnFindCertificate.Location = new System.Drawing.Point(239, 253);
+            this.btnFindCertificate.Name = "btnFindCertificate";
+            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnFindCertificate.TabIndex = 75;
+            this.btnFindCertificate.UseVisualStyleBackColor = false;
+            // 
+            // btnAbreConfig
+            // 
+            this.btnAbreConfig.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnAbreConfig.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAbreConfig.BackgroundImage")));
+            this.btnAbreConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnAbreConfig.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnAbreConfig.FlatAppearance.BorderSize = 0;
+            this.btnAbreConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAbreConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAbreConfig.ForeColor = System.Drawing.Color.White;
+            this.btnAbreConfig.Location = new System.Drawing.Point(216, 35);
+            this.btnAbreConfig.Name = "btnAbreConfig";
+            this.btnAbreConfig.Size = new System.Drawing.Size(47, 25);
+            this.btnAbreConfig.TabIndex = 74;
+            this.btnAbreConfig.UseVisualStyleBackColor = false;
+            this.btnAbreConfig.Click += new System.EventHandler(this.btnAbreConfig_Click);
+            // 
             // configuraçõesToolStripMenuItem
             // 
             this.configuraçõesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.salvarEditarToolStripMenuItem,
-            this.preferênciasToolStripMenuItem});
+            this.preferênciasToolStripMenuItem,
+            this.editarConfiguraçãoToolStripMenuItem});
+            this.configuraçõesToolStripMenuItem.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.settings_general;
             this.configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
-            this.configuraçõesToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.configuraçõesToolStripMenuItem.Size = new System.Drawing.Size(112, 20);
             this.configuraçõesToolStripMenuItem.Text = "&Configurações";
             // 
             // salvarEditarToolStripMenuItem
             // 
+            this.salvarEditarToolStripMenuItem.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.add;
             this.salvarEditarToolStripMenuItem.Name = "salvarEditarToolStripMenuItem";
-            this.salvarEditarToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.salvarEditarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.salvarEditarToolStripMenuItem.Text = "&Nova Configuração";
             this.salvarEditarToolStripMenuItem.Click += new System.EventHandler(this.salvarEditarToolStripMenuItem_Click);
             // 
             // preferênciasToolStripMenuItem
             // 
+            this.preferênciasToolStripMenuItem.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.settings;
             this.preferênciasToolStripMenuItem.Name = "preferênciasToolStripMenuItem";
-            this.preferênciasToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.preferênciasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.preferênciasToolStripMenuItem.Text = "&Preferências";
             this.preferênciasToolStripMenuItem.Click += new System.EventHandler(this.preferênciasToolStripMenuItem_Click);
+            // 
+            // editarConfiguraçãoToolStripMenuItem
+            // 
+            this.editarConfiguraçãoToolStripMenuItem.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.edit_file;
+            this.editarConfiguraçãoToolStripMenuItem.Name = "editarConfiguraçãoToolStripMenuItem";
+            this.editarConfiguraçãoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editarConfiguraçãoToolStripMenuItem.Text = "Editar Configuração";
+            this.editarConfiguraçãoToolStripMenuItem.Click += new System.EventHandler(this.editarConfiguraçãoToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -738,17 +793,18 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "SmartNota by ACBr.net";
+            this.Text = "SmartNota : RPS";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabControl3.ResumeLayout(false);
-            this.tabPage9.ResumeLayout(false);
             this.tabPage10.ResumeLayout(false);
+            this.tabPage9.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.tabPage12.ResumeLayout(false);
             this.tabPage13.ResumeLayout(false);
@@ -827,6 +883,7 @@
         private System.Windows.Forms.Label lblRazaoSocial;
         private System.Windows.Forms.Label lblIM;
         private System.Windows.Forms.Label lblCNPJ;
+        private System.Windows.Forms.ToolStripMenuItem editarConfiguraçãoToolStripMenuItem;
     }
 }
 

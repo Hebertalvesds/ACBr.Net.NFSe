@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormNova));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtConfigName = new System.Windows.Forms.TextBox();
@@ -59,24 +60,20 @@
             this.txtFone = new System.Windows.Forms.TextBox();
             this.txtCodCidade = new System.Windows.Forms.TextBox();
             this.txtCodSiafi = new System.Windows.Forms.TextBox();
-            this.btnSalvar = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbCidades = new System.Windows.Forms.ComboBox();
             this.UriRetorno = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.lblUriEnvio = new System.Windows.Forms.Label();
             this.UriEnvio = new System.Windows.Forms.TextBox();
-            this.btnGetCertificate = new System.Windows.Forms.Button();
             this.txtNumeroSerie = new System.Windows.Forms.TextBox();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.txtCertificado = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.btnFindCertificate = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtErrors = new System.Windows.Forms.TextBox();
-            this.btnCancelar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstMunicipios = new System.Windows.Forms.ListView();
             this.cmhCidade = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -84,6 +81,12 @@
             this.cmhCodigo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmhCodigoSiafi = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmhProvedor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnCancelar = new System.Windows.Forms.Button();
+            this.btnSalvar = new System.Windows.Forms.Button();
+            this.btnFindCertificate = new System.Windows.Forms.Button();
+            this.btnGetCertificate = new System.Windows.Forms.Button();
+            this.cmbAmbiente = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -399,21 +402,6 @@
             this.txtCodSiafi.Size = new System.Drawing.Size(155, 24);
             this.txtCodSiafi.TabIndex = 109;
             // 
-            // btnSalvar
-            // 
-            this.btnSalvar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnSalvar.FlatAppearance.BorderSize = 0;
-            this.btnSalvar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSalvar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvar.ForeColor = System.Drawing.Color.White;
-            this.btnSalvar.Location = new System.Drawing.Point(679, 469);
-            this.btnSalvar.Name = "btnSalvar";
-            this.btnSalvar.Size = new System.Drawing.Size(170, 39);
-            this.btnSalvar.TabIndex = 169;
-            this.btnSalvar.Text = "Salvar";
-            this.btnSalvar.UseVisualStyleBackColor = false;
-            this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cmbCidades);
@@ -504,20 +492,6 @@
             this.UriEnvio.Size = new System.Drawing.Size(257, 24);
             this.UriEnvio.TabIndex = 149;
             // 
-            // btnGetCertificate
-            // 
-            this.btnGetCertificate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGetCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnGetCertificate.Location = new System.Drawing.Point(239, 124);
-            this.btnGetCertificate.Name = "btnGetCertificate";
-            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnGetCertificate.TabIndex = 20;
-            this.btnGetCertificate.Text = "...";
-            this.btnGetCertificate.UseVisualStyleBackColor = false;
-            this.btnGetCertificate.Click += new System.EventHandler(this.btnGetCertificate_Click);
-            // 
             // txtNumeroSerie
             // 
             this.txtNumeroSerie.BackColor = System.Drawing.Color.White;
@@ -569,21 +543,6 @@
             this.label19.TabIndex = 19;
             this.label19.Text = "Senha";
             // 
-            // btnFindCertificate
-            // 
-            this.btnFindCertificate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFindCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFindCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnFindCertificate.Location = new System.Drawing.Point(239, 36);
-            this.btnFindCertificate.Name = "btnFindCertificate";
-            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnFindCertificate.TabIndex = 15;
-            this.btnFindCertificate.Text = "...";
-            this.btnFindCertificate.UseVisualStyleBackColor = false;
-            this.btnFindCertificate.Click += new System.EventHandler(this.btnFindCertificate_Click);
-            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -616,22 +575,10 @@
             this.txtErrors.Size = new System.Drawing.Size(195, 402);
             this.txtErrors.TabIndex = 1;
             // 
-            // btnCancelar
-            // 
-            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.btnCancelar.FlatAppearance.BorderSize = 0;
-            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
-            this.btnCancelar.Location = new System.Drawing.Point(503, 469);
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(170, 39);
-            this.btnCancelar.TabIndex = 179;
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.UseVisualStyleBackColor = false;
-            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label22);
+            this.groupBox2.Controls.Add(this.cmbAmbiente);
             this.groupBox2.Controls.Add(this.UriRetorno);
             this.groupBox2.Controls.Add(this.txtCertificado);
             this.groupBox2.Controls.Add(this.label21);
@@ -695,6 +642,94 @@
             this.cmhProvedor.Text = "Provedor";
             this.cmhProvedor.Width = 86;
             // 
+            // btnCancelar
+            // 
+            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.btnCancelar.FlatAppearance.BorderSize = 0;
+            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
+            this.btnCancelar.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.close_window;
+            this.btnCancelar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancelar.Location = new System.Drawing.Point(631, 469);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(116, 39);
+            this.btnCancelar.TabIndex = 179;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCancelar.UseVisualStyleBackColor = false;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+            // 
+            // btnSalvar
+            // 
+            this.btnSalvar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnSalvar.FlatAppearance.BorderSize = 0;
+            this.btnSalvar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSalvar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSalvar.ForeColor = System.Drawing.Color.White;
+            this.btnSalvar.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.save;
+            this.btnSalvar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSalvar.Location = new System.Drawing.Point(753, 469);
+            this.btnSalvar.Name = "btnSalvar";
+            this.btnSalvar.Size = new System.Drawing.Size(96, 39);
+            this.btnSalvar.TabIndex = 169;
+            this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSalvar.UseVisualStyleBackColor = false;
+            this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
+            // 
+            // btnFindCertificate
+            // 
+            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
+            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
+            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFindCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFindCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.Location = new System.Drawing.Point(239, 36);
+            this.btnFindCertificate.Name = "btnFindCertificate";
+            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnFindCertificate.TabIndex = 15;
+            this.btnFindCertificate.UseVisualStyleBackColor = false;
+            this.btnFindCertificate.Click += new System.EventHandler(this.btnFindCertificate_Click);
+            // 
+            // btnGetCertificate
+            // 
+            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
+            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
+            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.Location = new System.Drawing.Point(239, 124);
+            this.btnGetCertificate.Name = "btnGetCertificate";
+            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnGetCertificate.TabIndex = 20;
+            this.btnGetCertificate.UseVisualStyleBackColor = false;
+            this.btnGetCertificate.Click += new System.EventHandler(this.btnGetCertificate_Click);
+            // 
+            // cmbAmbiente
+            // 
+            this.cmbAmbiente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAmbiente.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAmbiente.FormattingEnabled = true;
+            this.cmbAmbiente.Location = new System.Drawing.Point(6, 259);
+            this.cmbAmbiente.Name = "cmbAmbiente";
+            this.cmbAmbiente.Size = new System.Drawing.Size(257, 26);
+            this.cmbAmbiente.TabIndex = 160;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(6, 242);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(101, 14);
+            this.label22.TabIndex = 161;
+            this.label22.Text = "Ambiente Padrão";
+            // 
             // FormNova
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -708,6 +743,7 @@
             this.Controls.Add(this.btnSalvar);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormNova";
@@ -781,5 +817,7 @@
         private System.Windows.Forms.ColumnHeader cmhCodigo;
         private System.Windows.Forms.ColumnHeader cmhCodigoSiafi;
         private System.Windows.Forms.ColumnHeader cmhProvedor;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox cmbAmbiente;
     }
 }

@@ -31,7 +31,8 @@ namespace ACBr.Net.NFSe.Demo
         private Preferencias formPreferencias;
         private string UriRetorno;
         private string UriEnvio;
-
+        private string pathConfig;
+        private string pathCidades;
         #endregion Fields
 
         #region Constructors
@@ -40,9 +41,9 @@ namespace ACBr.Net.NFSe.Demo
         {
             InitializeComponent();
             formPreferencias = new Preferencias();
-            var configPath = Application.StartupPath + @"\Configuracoes";
-            if (!Directory.Exists(configPath)) formPreferencias.Show();
-            config = ACBrConfig.CreateOrLoad(Path.Combine(configPath, "nfse.config"));
+            pathConfig = Application.StartupPath + @"\Configuracoes";
+            if (!Directory.Exists(pathConfig)) formPreferencias.Show();
+            config = ACBrConfig.CreateOrLoad(Path.Combine(pathConfig, "nfse.config"));
         }
 
         #endregion Constructors
@@ -81,15 +82,20 @@ namespace ACBr.Net.NFSe.Demo
             ExecuteSafe(() =>
             {
                 var lConfig = "";
-                var path = config.Get("CaminhoConfiguracoes", string.Empty);
+                
                 ExecuteSafe(() =>
                 {
-                    lConfig = Helpers.OpenFile("Arquivo de Configuração (*.config)|*.config*|Todos os arquivos|*.*", path, "Abrir");
+                    lConfig = Helpers.OpenFile("Arquivo de Configuração (*.config)|*.config*|Todos os arquivos|*.*", pathConfig, "Abrir");
                 });
+                
+                var customConfig = ACBrConfig.CreateOrLoad(lConfig);
 
-                config = ACBrConfig.CreateOrLoad(lConfig);
-                LoadConfig();
+                SaveConfig(customConfig);
+                LoadConfig(customConfig);
 
+                acbrNFSe.Configuracoes.PrestadorPadrao.CpfCnpj = txtCPFCNPJ.Text.OnlyNumbers();
+                acbrNFSe.Configuracoes.PrestadorPadrao.InscricaoMunicipal = txtIM.Text.OnlyNumbers();
+                acbrNFSe.Configuracoes.PrestadorPadrao.RazaoSocial = txtRazaoSocial.Text;
             });
         }
 
@@ -361,7 +367,7 @@ namespace ACBr.Net.NFSe.Demo
             InitializeLog();
             this.Log().Debug("Log Iniciado");
 
-            cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Homologacao);
+            cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Producao);
             LoadData();
             LoadConfig();
 
@@ -492,41 +498,92 @@ namespace ACBr.Net.NFSe.Demo
             LogManager.Configuration = config;
         }
 
-        private void LoadConfig()
+        private void LoadConfig(ACBrConfig customConfig = null)
         {
-            UriEnvio = config.Get("UriEnvio", string.Empty);
-            UriRetorno = config.Get("UriRetorno", string.Empty);
-
-            var cidades = config.Get("CaminhoArqCidades", string.Empty);
+            
+            var cidades = Path.Combine(config.Get("CaminhoArqCidades", string.Empty),"Municipios.nfse");
             
             if (!cidades.IsEmpty()) LoadMunicipios(cidades);
 
-            var cnpj = config.Get("PrestadorCPFCNPJ", string.Empty);
-            if (!cnpj.IsEmpty())
+            if (!customConfig.IsNull())
             {
-                txtCPFCNPJ.Text = cnpj.FormataCPFCNPJ();
-            }
+                config = customConfig;
+                UriEnvio = config.Get("UriEnvio", string.Empty);
+                UriRetorno = config.Get("UriRetorno", string.Empty);
 
-            txtConfigName.Text = !config.Get("UltimaConfiguracao", String.Empty).IsEmpty() ? config.Get("UltimaConfiguracao", String.Empty) : config.Get("NomeConfig", String.Empty);
-            
-            txtIM.Text = config.Get("PrestadorIM", string.Empty);
-            txtRazaoSocial.Text = config.Get("PrestadorRazaoSocial", string.Empty);
-
-            var codMunicipio = config.Get("Municipio", 0);
-            if (codMunicipio > 0)
-            {
-                var municipio = ProviderManager.Municipios.SingleOrDefault(x => x.Codigo == codMunicipio);
-                if (municipio != null)
+                var cnpj = config.Get("PrestadorCPFCNPJ", string.Empty);
+                if (!cnpj.IsEmpty())
                 {
-                    cmbCidades.SelectedItem = municipio;
+                    txtCPFCNPJ.Text = cnpj.FormataCPFCNPJ();
                 }
+
+                txtConfigName.Text = !config.Get("UltimaConfiguracao", String.Empty).IsEmpty() ? config.Get("UltimaConfiguracao", String.Empty) : config.Get("NomeConfig", String.Empty);
+
+                txtIM.Text = config.Get("PrestadorIM", string.Empty);
+                txtRazaoSocial.Text = config.Get("PrestadorRazaoSocial", string.Empty);
+
+                var codMunicipio = config.Get("Municipio", 0);
+                if (codMunicipio > 0)
+                {
+                    var municipio = ProviderManager.Municipios.SingleOrDefault(x => x.Codigo == codMunicipio);
+                    if (municipio != null)
+                    {
+                        cmbCidades.SelectedItem = municipio;
+                        txtUf.Text = municipio.UF.ToString();
+                        txtCodSiafi.Text = municipio.CodigoSiafi.ToString();
+                        txtCodCidade.Text = municipio.Codigo.ToString();
+
+                        acbrNFSe.Configuracoes.WebServices.CodigoMunicipio = municipio.Codigo;
+                        acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Municipio = municipio.Nome;
+                        acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.CodigoMunicipio = municipio.Codigo;
+                        acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Uf = municipio.UF.ToString();
+                    }
+                }
+
+                var ambiente = config.Get("Ambiente", DFeTipoAmbiente.Producao);
+
+                switch (ambiente)
+                {
+                    case DFeTipoAmbiente.Producao:
+                        cmbAmbiente.SelectedIndex = 0;
+                        break;
+                    default:
+                        cmbAmbiente.SelectedIndex = 1;
+                        break;
+                }
+
+                acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
+
+                txtCertificado.Text = config.Get("Certificado", string.Empty);
+                txtSenha.Text = config.Get("Senha", string.Empty);
+                txtNumeroSerie.Text = config.Get("NumeroSerie", string.Empty);
             }
+            
+            
+        }
 
-            cmbAmbiente.SelectedItem = config.Get("Ambiente", DFeTipoAmbiente.Homologacao);
+        private void SaveConfig(ACBrConfig customConfig)
+        {
+            //Salva na Configuração Default
+            config.Set("UltimaConfiguracao", customConfig.Get("NomeConfig",string.Empty));
 
-            txtCertificado.Text = config.Get("Certificado", string.Empty);
-            txtSenha.Text = config.Get("Senha", string.Empty);
-            txtNumeroSerie.Text = config.Get("NumeroSerie", string.Empty);            
+            config.Set("PrestadorCPFCNPJ", customConfig.Get("PrestadorCPFCNPJ", string.Empty));
+            config.Set("PrestadorIM", customConfig.Get("PrestadorIM", string.Empty));
+            config.Set("PrestadorRazaoSocial", customConfig.Get("PrestadorRazaoSocial", string.Empty));
+
+            config.Set("Municipio", txtCodCidade.Text.OnlyNumbers());
+
+            config.Set("Ambiente", customConfig.Get("Ambiente", string.Empty));
+
+            config.Set("Certificado", customConfig.Get("Certificado", string.Empty));
+            config.Set("Senha", customConfig.Get("Senha", string.Empty));
+            config.Set("NumeroSerie", customConfig.Get("NumeroSerie", string.Empty));
+
+            //config.Set("CaminhoArqCidades", txtArquivoCidades.Text);
+            config.Set("UriEnvio", customConfig.Get("UriEnvio", string.Empty));
+            config.Set("UriRetorno", customConfig.Get("UriRetorno", string.Empty));
+
+            config.Save();
         }
 
         private void SaveConfig()
@@ -725,6 +782,18 @@ namespace ACBr.Net.NFSe.Demo
         private void preferênciasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new Preferencias().Show();
+        }
+
+        private void editarConfiguraçãoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!txtConfigName.Text.IsEmpty())
+            {
+                new FormNova(Path.Combine(pathConfig, txtConfigName.Text + ".config")).Show();
+            }
+            else
+            {
+                MessageBox.Show("Só é permitido editar a configuração atual!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

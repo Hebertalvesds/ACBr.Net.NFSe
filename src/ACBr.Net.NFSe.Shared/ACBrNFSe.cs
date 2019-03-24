@@ -112,7 +112,7 @@ namespace ACBr.Net.NFSe
                 
                 ServicePointManager.SecurityProtocol = protocolType;
                 ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateServerCertificate);
-
+                
                 using (var provider = ProviderManager.GetProvider(Configuracoes))
                 {
                     

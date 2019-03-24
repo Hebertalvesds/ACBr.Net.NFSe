@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preferencias));
             this.btnFolderConfig = new System.Windows.Forms.Button();
             this.txtFolderConfig = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -45,9 +46,12 @@
             // 
             // btnFolderConfig
             // 
-            this.btnFolderConfig.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnFolderConfig.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnFolderConfig.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFolderConfig.BackgroundImage")));
+            this.btnFolderConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnFolderConfig.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnFolderConfig.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFolderConfig.FlatAppearance.BorderSize = 0;
             this.btnFolderConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFolderConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFolderConfig.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
@@ -55,7 +59,6 @@
             this.btnFolderConfig.Name = "btnFolderConfig";
             this.btnFolderConfig.Size = new System.Drawing.Size(24, 24);
             this.btnFolderConfig.TabIndex = 40;
-            this.btnFolderConfig.Text = "...";
             this.btnFolderConfig.UseVisualStyleBackColor = false;
             this.btnFolderConfig.Click += new System.EventHandler(this.btnFolderConfig_Click);
             // 
@@ -80,15 +83,17 @@
             // 
             // btnPathXml
             // 
-            this.btnPathXml.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnPathXml.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnPathXml.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPathXml.BackgroundImage")));
+            this.btnPathXml.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPathXml.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnPathXml.FlatAppearance.BorderSize = 0;
             this.btnPathXml.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPathXml.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
             this.btnPathXml.Location = new System.Drawing.Point(245, 182);
             this.btnPathXml.Name = "btnPathXml";
             this.btnPathXml.Size = new System.Drawing.Size(24, 24);
             this.btnPathXml.TabIndex = 35;
-            this.btnPathXml.Text = "...";
             this.btnPathXml.UseVisualStyleBackColor = false;
             this.btnPathXml.Click += new System.EventHandler(this.btnPathXml_Click);
             // 
@@ -152,15 +157,17 @@
             // 
             // btnSelecionarSchema
             // 
-            this.btnSelecionarSchema.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnSelecionarSchema.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnSelecionarSchema.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSelecionarSchema.BackgroundImage")));
+            this.btnSelecionarSchema.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSelecionarSchema.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnSelecionarSchema.FlatAppearance.BorderSize = 0;
             this.btnSelecionarSchema.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelecionarSchema.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
             this.btnSelecionarSchema.Location = new System.Drawing.Point(245, 114);
             this.btnSelecionarSchema.Name = "btnSelecionarSchema";
             this.btnSelecionarSchema.Size = new System.Drawing.Size(24, 24);
             this.btnSelecionarSchema.TabIndex = 28;
-            this.btnSelecionarSchema.Text = "...";
             this.btnSelecionarSchema.UseVisualStyleBackColor = false;
             this.btnSelecionarSchema.Click += new System.EventHandler(this.btnSelecionarSchema_Click);
             // 
@@ -182,11 +189,14 @@
             this.btnSalvar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSalvar.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvar.ForeColor = System.Drawing.Color.White;
-            this.btnSalvar.Location = new System.Drawing.Point(12, 225);
+            this.btnSalvar.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.save;
+            this.btnSalvar.Location = new System.Drawing.Point(168, 225);
             this.btnSalvar.Name = "btnSalvar";
-            this.btnSalvar.Size = new System.Drawing.Size(255, 39);
+            this.btnSalvar.Size = new System.Drawing.Size(101, 39);
             this.btnSalvar.TabIndex = 25;
             this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSalvar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
             // 
@@ -209,6 +219,7 @@
             this.Controls.Add(this.chkSalvarArquivos);
             this.Controls.Add(this.btnSelecionarSchema);
             this.Controls.Add(this.label12);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Preferencias";
