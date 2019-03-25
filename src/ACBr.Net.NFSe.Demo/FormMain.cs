@@ -63,15 +63,21 @@ namespace ACBr.Net.NFSe.Demo
                 MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
             {
-                this.Log().Info("Lendo Arquivos de: " + UriEnvio);
-                var url = new UriBuilder(UriEnvio);
-                var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
+//                while(1 == 1){
+                    this.Log().Info("Lendo Arquivos de: " + UriEnvio);
+                    var url = new UriBuilder(UriEnvio);
+                    var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
 
-                var root = xml.Root;
+                    var root = xml.Root;
 
-                if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
-                else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
-                else MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
+                    if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
+                    else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
+                    else
+                    {
+                        MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
+                        throw new ApplicationException("Processamento Interrompido");
+                    }
+//                }
 
             }
 
@@ -656,11 +662,13 @@ namespace ACBr.Net.NFSe.Demo
                 GerarRps(xxml);
 
                 var ret = acbrNFSe.Enviar(numero);
+                
                 if (ret.Sucesso)
                 {
                     this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno);
                     var numeroLote = ret.NumeroLote;
-                    ResultadoEnvioLoteRps(numeroLote, ret.XmlRetorno, UriRetorno);
+                    var xmlRetonro = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
+                    ResultadoEnvioLoteRps(numeroLote, xmlRetonro, UriRetorno);
                 }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
@@ -679,7 +687,8 @@ namespace ACBr.Net.NFSe.Demo
                 if (ret.Sucesso)
                 {
                     this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
-                    ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno);
+                    var xmlRetonro = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
+                    ResultadoConsultaLoteRps(ret.Protocolo, xmlRetonro, UriRetorno);
                 }
                 wbbDados.LoadXml(ret.XmlEnvio);
                 wbbResposta.LoadXml(ret.XmlRetorno);
@@ -736,8 +745,12 @@ namespace ACBr.Net.NFSe.Demo
 
                 var webCliente = new System.Net.WebClient();
                 byte[] bytes_resposta = webCliente.UploadValues(caminho, "POST", param);
-                ASCIIEncoding enc = new ASCIIEncoding();
-                string resposta = enc.GetString(bytes_resposta);
+                string resposta = Encoding.ASCII.GetString(bytes_resposta);
+                if (!resposta.IsEmpty() || resposta.ToUpper() != "OK")
+                {
+                    this.Log().Error("Erro ao gravar Nota Fiscal: \n" + resposta);
+                    throw new ApplicationException("Erro ao gravar nota Fiscal: " + resposta);
+                }
             }
             catch (System.Net.WebException we)
             {
@@ -757,6 +770,14 @@ namespace ACBr.Net.NFSe.Demo
             }
         }
 
+        private static XElement RemoveAllNamespaces(XElement e)
+        {
+            return new XElement(e.Name.LocalName, (from n in e.Nodes()
+                                                   select ((n is XElement) ? RemoveAllNamespaces(n as XElement) : n)),
+            (e.HasAttributes) ? (from a in e.Attributes() where (!a.IsNamespaceDeclaration)
+                                 select new XAttribute(a.Name.LocalName, a.Value)) : null);
+        }
+
         #endregion Methods
 
         private void salvarEditarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -773,7 +794,8 @@ namespace ACBr.Net.NFSe.Demo
             if (ret.Sucesso)
             {
                 this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
-                ResultadoConsultaLoteRps(ret.Protocolo, ret.XmlRetorno, UriRetorno);
+                var xmlEnvio = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
+                ResultadoConsultaLoteRps(protocolo, xmlEnvio, UriRetorno);
             }
             wbbDados.LoadXml(ret.XmlEnvio);
             wbbResposta.LoadXml(ret.XmlRetorno);
