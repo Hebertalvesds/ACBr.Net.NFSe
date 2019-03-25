@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Security;
+
 namespace ACBr.Net.NFSe.Providers.Pronim
 {
     class PronimHomoServiceClient : NFSeServiceClient<IPronimHomoService>, IPronimHomoService, IPronimServiceClient

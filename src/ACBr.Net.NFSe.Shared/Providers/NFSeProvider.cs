@@ -35,41 +35,15 @@ namespace ACBr.Net.NFSe.Providers
 {
     public enum NFSeProvider : byte
     {
-        Abaco = 0,
-
-        Betha = 1,
-
-        [Description("Betha v2")]
-        Betha2 = 2,
-
-        Coplan = 3,
-
-        DSF = 4,
-
-        FissLex = 12,
-
-        Ginfes = 5,
+        
+        Ginfes = 1,
 
         [Description("Ginfes v2")]
-        GinfesV2 = 13,
-
-        GovDigital = 6,
-
-        [Description("Nota Carioca")]
-        NotaCarioca = 7,
-
-        [Description("Porto Alegre")]
-        PortoAlegre = 8,
-
-        [Description("São Paulo")]
-        SaoPaulo = 9,
-
-        WebIss = 10,
-
-        [Description("WebIss v2")]
-        WebIss2 = 11,
+        GinfesV2 = 2,
 
         [Description("Pronim")]
-        Pronim = 14
+        Pronim = 3,
+
+        Vitoria = 4
     }
 }

@@ -1,16 +1,13 @@
-﻿using ACBr.Net.Core.Extensions;
+﻿using ACbr.Net.Storage.Models;
+using ACBr.Net.Core.Extensions;
 using ACBr.Net.DFe.Core.Common;
 using ACBr.Net.NFSe.Providers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+ACbr.Net.Storage.Models;
 
 namespace ACBr.Net.NFSe.Demo.Configuracoes
 {
@@ -21,6 +18,7 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
         private ACBrConfig config;
         private ACBrConfig editConfig;
         private string ConfigPath;
+        private LiteDB.LiteDatabase DataBase;
         #endregion Fields
 
         #region Constructors
@@ -37,6 +35,11 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
             if (!municipioArq.IsEmpty()) LoadMunicipios(municipioArq);
             cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Producao);
+        }
+
+        public FormNova(LiteDB.LiteDatabase db) : this()
+        {
+            DataBase = db;
         }
 
         public FormNova(string Configuracao) : this()
@@ -262,6 +265,37 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
+            using (DataBase)
+            {
+                var collection = DataBase.GetCollection<Prestador>("prestador");
+
+                var prestador = new Prestador
+                {
+                    NomeConfig = txtConfigName.Text,
+                    CnpjCpf = txtCPFCNPJ.Text.OnlyNumbers(),
+                    RazaoSocial = txtRazaoSocial.Text,
+                    NomeFantasia = txtFantasia.Text ?? "",
+                    Telefone = int.Parse(txtFone.Text.OnlyNumbers()),
+                    Cep = int.Parse(txtCEP.Text.OnlyNumbers()),
+                    Endereco = txtEndereco.Text ?? "",
+                    Complemento = txtComplemento.Text ?? "",
+                    Bairro = txtBairro.Text ?? "",
+                    Cidade = cmbCidades.SelectedText,
+                    Uf = txtUf.Text,
+                    CodCidade = int.Parse(txtCodCidade.Text),
+                    CodSiaf = int.Parse(txtCodSiafi.Text),
+
+                    CertPxsPath = txtCertificado.Text ?? "",
+                    Senha = txtSenha.Text ?? "",
+                    Serial = txtNumeroSerie.Text ?? "",
+                    XmlListaPath = UriEnvio.Text,
+                    XmlProcessaPath = UriRetorno.Text,
+
+                    Ambiente = cmbAmbiente.SelectedText,
+                };
+
+                collection.Insert(prestador);
+            }
             if (SaveNewConfig())
             {
                 MessageBox.Show("Arquivo de configurações criado em: " + ConfigPath, "Sucesso!", MessageBoxButtons.OK, MessageBoxIcon.Information);

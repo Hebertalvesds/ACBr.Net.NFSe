@@ -15,10 +15,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Starline.SmartNota.Util;
-using ACBr.Net.NFSe.Configuracao;
-using System.Xml;
-using System.Globalization;
 using ACBr.Net.NFSe.Demo.Configuracoes;
+using ACbr.Net.Storage;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -33,6 +31,7 @@ namespace ACBr.Net.NFSe.Demo
         private string UriEnvio;
         private string pathConfig;
         private string pathCidades;
+        private LiteDB.LiteDatabase DB;
         #endregion Fields
 
         #region Constructors
@@ -42,6 +41,9 @@ namespace ACBr.Net.NFSe.Demo
             InitializeComponent();
             formPreferencias = new Preferencias();
             pathConfig = Application.StartupPath + @"\Configuracoes";
+
+            DB = Connect.OpenConnection(pathConfig);
+
             if (!Directory.Exists(pathConfig)) formPreferencias.Show();
             config = ACBrConfig.CreateOrLoad(Path.Combine(pathConfig, "nfse.config"));
         }
@@ -782,7 +784,8 @@ namespace ACBr.Net.NFSe.Demo
 
         private void salvarEditarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormNova().Show();
+            //new FormNova().Show();
+            new FormNova(DB).Show();
         }
 
         private void button1_Click(object sender, EventArgs e)

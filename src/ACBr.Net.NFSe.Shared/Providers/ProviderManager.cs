@@ -43,6 +43,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using ACBr.Net.NFSe.Providers.Pronim;
+using ACBr.Net.NFSe.Providers.Vitoria;
 
 namespace ACBr.Net.NFSe.Providers
 {
@@ -60,9 +61,9 @@ namespace ACBr.Net.NFSe.Providers
             {
                 
                 {NFSeProvider.Ginfes, typeof(ProviderGinfes)},
-                {NFSeProvider.GovDigital, typeof(ProviderGovDigital)},
                 {NFSeProvider.GinfesV2, typeof(ProviderGinfesV2)},
-                {NFSeProvider.Pronim, typeof(ProviderPronim)}
+                {NFSeProvider.Pronim, typeof(ProviderPronim)},
+                {NFSeProvider.Vitoria, typeof(ProviderVitoria)}
             };
 
             Load();
