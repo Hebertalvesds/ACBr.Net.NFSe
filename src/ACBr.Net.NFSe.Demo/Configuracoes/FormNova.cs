@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-ACbr.Net.Storage.Models;
+using ACbr.Net.Storage.Models;
+using LiteDB;
 
 namespace ACBr.Net.NFSe.Demo.Configuracoes
 {
@@ -16,9 +17,9 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
         #region Fields
         private ACBrNFSe acbrNFSe;
         private ACBrConfig config;
-        private ACBrConfig editConfig;
         private string ConfigPath;
-        private LiteDB.LiteDatabase DataBase;
+        private String DataBase;
+        private int IdConfig;
         #endregion Fields
 
         #region Constructors
@@ -35,14 +36,21 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
             if (!municipioArq.IsEmpty()) LoadMunicipios(municipioArq);
             cmbAmbiente.EnumDataSource<DFeTipoAmbiente>(DFeTipoAmbiente.Producao);
+
         }
 
-        public FormNova(LiteDB.LiteDatabase db) : this()
+        public FormNova(string db, int id = 0) : this()
         {
             DataBase = db;
+            IdConfig = id;
+
+            if(IdConfig != 0)
+            {
+                CarregaConfiguracao(IdConfig);
+            }
         }
 
-        public FormNova(string Configuracao) : this()
+        /*public FormNova(string Configuracao) : this()
         {
             editConfig = ACBrConfig.CreateOrLoad(Configuracao);
 
@@ -80,8 +88,9 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
                     cmbAmbiente.SelectedIndex = 1;
                     break;
             }
-        }
+        }*/
         #endregion Constructors
+
         private void ExecuteSafe(Action action)
         {
             try
@@ -92,45 +101,6 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
             {
                 MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private bool SaveNewConfig()
-        {
-            if (ValidarCampos())
-            {
-                var specificConfig = ACBrConfig.CreateOrLoad(System.IO.Path.Combine(ConfigPath, txtConfigName.Text + ".config"));
-
-                specificConfig.Set("NomeConfig", txtConfigName.Text);
-                specificConfig.Set("PrestadorCPFCNPJ", txtCPFCNPJ.Text.OnlyNumbers());
-                specificConfig.Set("PrestadorIM", txtIM.Text.OnlyNumbers());
-                specificConfig.Set("PrestadorRazaoSocial", txtRazaoSocial.Text);
-                specificConfig.Set("PrestadorFantasia", txtFantasia.Text);
-                specificConfig.Set("PrestadorFone", txtFone.Text);
-                specificConfig.Set("PrestadorCEP", txtCEP.Text);
-                specificConfig.Set("PrestadorEndereco", txtEndereco.Text);
-                specificConfig.Set("PrestadorNumero", txtNumero.Text);
-                specificConfig.Set("PrestadorComplemento", txtComplemento.Text);
-                specificConfig.Set("PrestadorBairro", txtBairro.Text);
-
-                specificConfig.Set("Municipio", txtCodCidade.Text.OnlyNumbers());
-                specificConfig.Set("Ambiente", cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>());
-                //specificConfig.Set("Ambiente", cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>());
-
-                specificConfig.Set("Certificado", txtCertificado.Text);
-                specificConfig.Set("Senha", txtSenha.Text);
-                specificConfig.Set("NumeroSerie", txtNumeroSerie.Text);
-
-                //specificConfig.Set("CaminhoArqCidades", txtArquivoCidades.Text);
-                specificConfig.Set("UriEnvio", UriEnvio.Text);
-                specificConfig.Set("UriRetorno", UriRetorno.Text);
-
-                specificConfig.Save();
-                
-                return true;
-            }
-
-            return false;
-
         }
 
         private bool ValidarCampos()
@@ -243,8 +213,68 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
             UpdateCidades();
         }
+        
+        private void CarregaConfiguracao(int id)
+        {
+            if(id != 0)
+            {
+                using(var db = new LiteDatabase(DataBase))
+                {
+                    var prestador = db.GetCollection<Prestador>("prestador").FindById(id);
 
+                    txtConfigName.Text = prestador.NomeConfig;
+                    txtCPFCNPJ.Text = prestador.CnpjCpf;
+                    txtIM.Text = prestador.IM;
+                    txtRazaoSocial.Text = prestador.RazaoSocial;
+                    txtFantasia.Text = prestador.NomeFantasia;
+                    txtFone.Text = prestador.Telefone;
+                    txtEndereco.Text = prestador.Endereco;
+                    //txtNumero.Text = prestador.Numero;
+                    txtBairro.Text = prestador.Bairro;
+                    txtComplemento.Text = prestador.Complemento;
+                    txtCEP.Text = prestador.Cep;
+                    UriEnvio.Text = prestador.XmlListaPath;
+                    UriRetorno.Text = prestador.XmlProcessaPath;
+                    txtNumeroSerie.Text = prestador.Serial;
+                    txtSenha.Text = prestador.Senha;
+                    txtCertificado.Text = prestador.CertPxsPath;
+
+                    var codMunicipio = prestador.CodCidade;
+                    if (codMunicipio > 0)
+                    {
+                        var municipio = ProviderManager.Municipios.SingleOrDefault(x => x.Codigo == codMunicipio);
+                        if (municipio != null)
+                        {
+                            cmbCidades.SelectedItem = municipio;
+                            txtUf.Text = municipio.UF.ToString();
+                            txtCodSiafi.Text = municipio.CodigoSiafi.ToString();
+                            txtCodCidade.Text = municipio.Codigo.ToString();
+
+                            acbrNFSe.Configuracoes.WebServices.CodigoMunicipio = municipio.Codigo;
+                            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Municipio = municipio.Nome;
+                            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.CodigoMunicipio = municipio.Codigo;
+                            acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Uf = municipio.UF.ToString();
+                        }
+                    }
+
+                    switch (prestador.Ambiente)
+                    {
+                        case "Produção":
+                            cmbAmbiente.SelectedIndex = 0;
+                            break;
+                        case "Homologação":
+                            cmbAmbiente.SelectedIndex = 1;
+                            break;
+                        default:
+                            cmbAmbiente.SelectedIndex = 0;
+                            break;
+                    }
+
+                }
+            }
+        }
         #region Events
+
         private void btnGetCertificate_Click(object sender, EventArgs e)
         {
             ExecuteSafe(() =>
@@ -265,42 +295,101 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            using (DataBase)
+            var cnpjCpf = txtCPFCNPJ.Text.OnlyNumbers();
+            var cidade = cmbCidades.SelectedText.Trim();
+            var Uf = txtUf.Text;
+            var codCidade = int.Parse(txtCodCidade.Text);
+            var codSiaf = int.Parse(txtCodSiafi.Text);
+            
+            if (ValidarCampos())
             {
-                var collection = DataBase.GetCollection<Prestador>("prestador");
+                int count = 0;
 
-                var prestador = new Prestador
+                using (var db = new LiteDatabase(DataBase))
                 {
-                    NomeConfig = txtConfigName.Text,
-                    CnpjCpf = txtCPFCNPJ.Text.OnlyNumbers(),
-                    RazaoSocial = txtRazaoSocial.Text,
-                    NomeFantasia = txtFantasia.Text ?? "",
-                    Telefone = int.Parse(txtFone.Text.OnlyNumbers()),
-                    Cep = int.Parse(txtCEP.Text.OnlyNumbers()),
-                    Endereco = txtEndereco.Text ?? "",
-                    Complemento = txtComplemento.Text ?? "",
-                    Bairro = txtBairro.Text ?? "",
-                    Cidade = cmbCidades.SelectedText,
-                    Uf = txtUf.Text,
-                    CodCidade = int.Parse(txtCodCidade.Text),
-                    CodSiaf = int.Parse(txtCodSiafi.Text),
+                    var prestadores = db.GetCollection<Prestador>();
 
-                    CertPxsPath = txtCertificado.Text ?? "",
-                    Senha = txtSenha.Text ?? "",
-                    Serial = txtNumeroSerie.Text ?? "",
-                    XmlListaPath = UriEnvio.Text,
-                    XmlProcessaPath = UriRetorno.Text,
+                    if (IdConfig == 0)
+                    {
+                        count = prestadores.Find(p => p.CodCidade == codCidade && p.CnpjCpf == cnpjCpf).Count();
+                        if (count == 0)
+                        {
 
-                    Ambiente = cmbAmbiente.SelectedText,
-                };
+                            var prestador = new Prestador
+                            {
+                                NomeConfig = txtConfigName.Text,
+                                CnpjCpf = txtCPFCNPJ.Text.OnlyNumbers(),
+                                IM = txtIM.Text,
+                                RazaoSocial = txtRazaoSocial.Text,
+                                NomeFantasia = txtFantasia.Text ?? "",
+                                Telefone = txtFone.Text.OnlyNumbers(),
+                                Cep = txtCEP.Text.OnlyNumbers(),
+                                Endereco = txtEndereco.Text ?? "",
+                                Complemento = txtComplemento.Text ?? "",
+                                Bairro = txtBairro.Text ?? "",
+                                Cidade = cmbCidades.SelectedText,
+                                Uf = txtUf.Text,
+                                CodCidade = int.Parse(txtCodCidade.Text),
+                                CodSiaf = int.Parse(txtCodSiafi.Text),
 
-                collection.Insert(prestador);
-            }
-            if (SaveNewConfig())
-            {
-                MessageBox.Show("Arquivo de configurações criado em: " + ConfigPath, "Sucesso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CertPxsPath = txtCertificado.Text ?? "",
+                                Senha = txtSenha.Text ?? "",
+                                Serial = txtNumeroSerie.Text ?? "",
+                                XmlListaPath = UriEnvio.Text,
+                                XmlProcessaPath = UriRetorno.Text,
+
+                                Ambiente = cmbAmbiente.SelectedValue.ToString(),
+                            };
+
+                            ExecuteSafe(() =>
+                            {
+                                prestadores.Insert(prestador);
+                            });
+                        }
+                        else
+                        {
+                            MessageBox.Show("A configuração para este CNPJ e Cidade já existe.", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    else
+                    {
+                        if (ValidarCampos())
+                        {
+                            var update = prestadores.FindById(IdConfig);
+
+                            update.NomeConfig = txtConfigName.Text;
+                            update.CnpjCpf = txtCPFCNPJ.Text.OnlyNumbers();
+                            update.IM = txtIM.Text;
+                            update.RazaoSocial = txtRazaoSocial.Text;
+                            update.NomeFantasia = txtFantasia.Text ?? "";
+                            update.Telefone = txtFone.Text.OnlyNumbers();
+                            update.Cep = txtCEP.Text.OnlyNumbers();
+                            update.Endereco = txtEndereco.Text ?? "";
+                            update.Complemento = txtComplemento.Text ?? "";
+                            update.Bairro = txtBairro.Text ?? "";
+                            update.Cidade = cmbCidades.SelectedText;
+                            update.Uf = txtUf.Text;
+                            update.CodCidade = int.Parse(txtCodCidade.Text);
+                            update.CodSiaf = int.Parse(txtCodSiafi.Text);
+
+                            update.CertPxsPath = txtCertificado.Text ?? "";
+                            update.Senha = txtSenha.Text ?? "";
+                            update.Serial = txtNumeroSerie.Text ?? "";
+                            update.XmlListaPath = UriEnvio.Text;
+                            update.XmlProcessaPath = UriRetorno.Text;
+
+                            update.Ambiente = cmbAmbiente.SelectedValue.ToString();
+
+                            prestadores.Update(update);
+                        }
+
+                    }
+
+                }
+
                 Hide();
                 Dispose();
+
             }
         }
         #endregion Events

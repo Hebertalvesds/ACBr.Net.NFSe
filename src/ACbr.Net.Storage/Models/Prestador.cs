@@ -9,10 +9,11 @@ namespace ACbr.Net.Storage.Models
         public int Id { get; set; }
         public string NomeConfig { get; set; }
         public string CnpjCpf { get; set; }
+        public string IM { get; set; }
         public string RazaoSocial { get; set; }
         public string NomeFantasia { get; set; }
-        public int Telefone { get; set; }
-        public int Cep { get; set; }
+        public string Telefone { get; set; }
+        public string Cep { get; set; }
         public string Endereco { get; set; }
         public string Complemento { get; set; }
         public string Bairro { get; set; }

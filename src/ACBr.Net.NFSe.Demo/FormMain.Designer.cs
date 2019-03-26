@@ -55,8 +55,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.btnFindCertificate = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnAbreConfig = new System.Windows.Forms.Button();
-            this.txtConfigName = new System.Windows.Forms.TextBox();
             this.txtCodSiafi = new System.Windows.Forms.TextBox();
             this.txtCodCidade = new System.Windows.Forms.TextBox();
             this.txtUf = new System.Windows.Forms.TextBox();
@@ -91,6 +89,7 @@
             this.salvarEditarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferênciasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editarConfiguraçãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmbConfiguracoes = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl3.SuspendLayout();
@@ -288,6 +287,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cmbConfiguracoes);
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.cmbAmbiente);
             this.groupBox1.Controls.Add(this.btnGetCertificate);
@@ -298,8 +298,6 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.btnFindCertificate);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.btnAbreConfig);
-            this.groupBox1.Controls.Add(this.txtConfigName);
             this.groupBox1.Controls.Add(this.txtCodSiafi);
             this.groupBox1.Controls.Add(this.txtCodCidade);
             this.groupBox1.Controls.Add(this.txtUf);
@@ -359,6 +357,7 @@
             // 
             // txtNumeroSerie
             // 
+            this.txtNumeroSerie.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNumeroSerie.Enabled = false;
             this.txtNumeroSerie.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNumeroSerie.Location = new System.Drawing.Point(6, 339);
@@ -368,6 +367,7 @@
             // 
             // txtSenha
             // 
+            this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSenha.Enabled = false;
             this.txtSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSenha.Location = new System.Drawing.Point(6, 296);
@@ -379,6 +379,7 @@
             // 
             // txtCertificado
             // 
+            this.txtCertificado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCertificado.Enabled = false;
             this.txtCertificado.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCertificado.Location = new System.Drawing.Point(6, 253);
@@ -428,34 +429,10 @@
             this.label9.TabIndex = 76;
             this.label9.Text = "Caminho";
             // 
-            // btnAbreConfig
-            // 
-            this.btnAbreConfig.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnAbreConfig.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAbreConfig.BackgroundImage")));
-            this.btnAbreConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnAbreConfig.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnAbreConfig.FlatAppearance.BorderSize = 0;
-            this.btnAbreConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAbreConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbreConfig.ForeColor = System.Drawing.Color.White;
-            this.btnAbreConfig.Location = new System.Drawing.Point(216, 35);
-            this.btnAbreConfig.Name = "btnAbreConfig";
-            this.btnAbreConfig.Size = new System.Drawing.Size(47, 25);
-            this.btnAbreConfig.TabIndex = 74;
-            this.btnAbreConfig.UseVisualStyleBackColor = false;
-            this.btnAbreConfig.Click += new System.EventHandler(this.btnAbreConfig_Click);
-            // 
-            // txtConfigName
-            // 
-            this.txtConfigName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfigName.Location = new System.Drawing.Point(6, 36);
-            this.txtConfigName.Name = "txtConfigName";
-            this.txtConfigName.Size = new System.Drawing.Size(204, 24);
-            this.txtConfigName.TabIndex = 73;
-            // 
             // txtCodSiafi
             // 
             this.txtCodSiafi.BackColor = System.Drawing.Color.White;
+            this.txtCodSiafi.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCodSiafi.Enabled = false;
             this.txtCodSiafi.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCodSiafi.Location = new System.Drawing.Point(137, 210);
@@ -468,6 +445,7 @@
             // txtCodCidade
             // 
             this.txtCodCidade.BackColor = System.Drawing.Color.White;
+            this.txtCodCidade.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCodCidade.Enabled = false;
             this.txtCodCidade.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCodCidade.Location = new System.Drawing.Point(6, 210);
@@ -480,6 +458,7 @@
             // txtUf
             // 
             this.txtUf.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtUf.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtUf.Enabled = false;
             this.txtUf.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUf.ForeColor = System.Drawing.SystemColors.WindowText;
@@ -492,6 +471,7 @@
             // 
             // txtRazaoSocial
             // 
+            this.txtRazaoSocial.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtRazaoSocial.Enabled = false;
             this.txtRazaoSocial.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtRazaoSocial.Location = new System.Drawing.Point(6, 122);
@@ -501,6 +481,7 @@
             // 
             // txtIM
             // 
+            this.txtIM.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtIM.Enabled = false;
             this.txtIM.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtIM.Location = new System.Drawing.Point(137, 79);
@@ -510,12 +491,15 @@
             // 
             // txtCPFCNPJ
             // 
+            this.txtCPFCNPJ.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCPFCNPJ.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtCPFCNPJ.Enabled = false;
             this.txtCPFCNPJ.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCPFCNPJ.Location = new System.Drawing.Point(6, 79);
             this.txtCPFCNPJ.Name = "txtCPFCNPJ";
             this.txtCPFCNPJ.Size = new System.Drawing.Size(125, 24);
             this.txtCPFCNPJ.TabIndex = 59;
+            this.txtCPFCNPJ.TextChanged += new System.EventHandler(this.txtCPFCNPJ_TextChanged);
             // 
             // label17
             // 
@@ -568,7 +552,7 @@
             this.cmbCidades.Enabled = false;
             this.cmbCidades.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbCidades.FormattingEnabled = true;
-            this.cmbCidades.Location = new System.Drawing.Point(6, 165);
+            this.cmbCidades.Location = new System.Drawing.Point(6, 164);
             this.cmbCidades.Name = "cmbCidades";
             this.cmbCidades.Size = new System.Drawing.Size(206, 26);
             this.cmbCidades.TabIndex = 64;
@@ -784,6 +768,18 @@
             this.editarConfiguraçãoToolStripMenuItem.Text = "Editar Configuração";
             this.editarConfiguraçãoToolStripMenuItem.Click += new System.EventHandler(this.editarConfiguraçãoToolStripMenuItem_Click);
             // 
+            // cmbConfiguracoes
+            // 
+            this.cmbConfiguracoes.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cmbConfiguracoes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbConfiguracoes.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.cmbConfiguracoes.FormattingEnabled = true;
+            this.cmbConfiguracoes.Location = new System.Drawing.Point(6, 33);
+            this.cmbConfiguracoes.Name = "cmbConfiguracoes";
+            this.cmbConfiguracoes.Size = new System.Drawing.Size(256, 26);
+            this.cmbConfiguracoes.TabIndex = 85;
+            this.cmbConfiguracoes.SelectedIndexChanged += new System.EventHandler(this.cmbConfiguracoes_SelectedIndexChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -867,8 +863,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnFindCertificate;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button btnAbreConfig;
-        private System.Windows.Forms.TextBox txtConfigName;
         private System.Windows.Forms.TextBox txtCodSiafi;
         private System.Windows.Forms.TextBox txtCodCidade;
         private System.Windows.Forms.TextBox txtUf;
@@ -885,6 +879,7 @@
         private System.Windows.Forms.Label lblIM;
         private System.Windows.Forms.Label lblCNPJ;
         private System.Windows.Forms.ToolStripMenuItem editarConfiguraçãoToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cmbConfiguracoes;
     }
 }
 

@@ -75,6 +75,10 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtErrors = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.cmbAmbiente = new System.Windows.Forms.ComboBox();
+            this.btnFindCertificate = new System.Windows.Forms.Button();
+            this.btnGetCertificate = new System.Windows.Forms.Button();
             this.lstMunicipios = new System.Windows.Forms.ListView();
             this.cmhCidade = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmhUF = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -83,10 +87,6 @@
             this.cmhProvedor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnSalvar = new System.Windows.Forms.Button();
-            this.btnFindCertificate = new System.Windows.Forms.Button();
-            this.btnGetCertificate = new System.Windows.Forms.Button();
-            this.cmbAmbiente = new System.Windows.Forms.ComboBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -113,6 +113,7 @@
             // txtConfigName
             // 
             this.txtConfigName.BackColor = System.Drawing.SystemColors.Window;
+            this.txtConfigName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtConfigName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConfigName.Location = new System.Drawing.Point(6, 35);
             this.txtConfigName.Name = "txtConfigName";
@@ -456,6 +457,7 @@
             // 
             // UriRetorno
             // 
+            this.UriRetorno.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.UriRetorno.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UriRetorno.Location = new System.Drawing.Point(6, 215);
             this.UriRetorno.Name = "UriRetorno";
@@ -598,6 +600,59 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Certificado e Destinos";
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(6, 242);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(101, 14);
+            this.label22.TabIndex = 161;
+            this.label22.Text = "Ambiente Padrão";
+            // 
+            // cmbAmbiente
+            // 
+            this.cmbAmbiente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAmbiente.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAmbiente.FormattingEnabled = true;
+            this.cmbAmbiente.Location = new System.Drawing.Point(6, 259);
+            this.cmbAmbiente.Name = "cmbAmbiente";
+            this.cmbAmbiente.Size = new System.Drawing.Size(257, 26);
+            this.cmbAmbiente.TabIndex = 160;
+            // 
+            // btnFindCertificate
+            // 
+            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
+            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
+            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFindCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFindCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.Location = new System.Drawing.Point(239, 36);
+            this.btnFindCertificate.Name = "btnFindCertificate";
+            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnFindCertificate.TabIndex = 15;
+            this.btnFindCertificate.UseVisualStyleBackColor = false;
+            this.btnFindCertificate.Click += new System.EventHandler(this.btnFindCertificate_Click);
+            // 
+            // btnGetCertificate
+            // 
+            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
+            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
+            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.Location = new System.Drawing.Point(239, 124);
+            this.btnGetCertificate.Name = "btnGetCertificate";
+            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnGetCertificate.TabIndex = 20;
+            this.btnGetCertificate.UseVisualStyleBackColor = false;
+            this.btnGetCertificate.Click += new System.EventHandler(this.btnGetCertificate_Click);
+            // 
             // lstMunicipios
             // 
             this.lstMunicipios.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -676,59 +731,6 @@
             this.btnSalvar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
-            // btnFindCertificate
-            // 
-            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
-            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
-            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFindCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFindCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnFindCertificate.Location = new System.Drawing.Point(239, 36);
-            this.btnFindCertificate.Name = "btnFindCertificate";
-            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnFindCertificate.TabIndex = 15;
-            this.btnFindCertificate.UseVisualStyleBackColor = false;
-            this.btnFindCertificate.Click += new System.EventHandler(this.btnFindCertificate_Click);
-            // 
-            // btnGetCertificate
-            // 
-            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
-            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
-            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGetCertificate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnGetCertificate.Location = new System.Drawing.Point(239, 124);
-            this.btnGetCertificate.Name = "btnGetCertificate";
-            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnGetCertificate.TabIndex = 20;
-            this.btnGetCertificate.UseVisualStyleBackColor = false;
-            this.btnGetCertificate.Click += new System.EventHandler(this.btnGetCertificate_Click);
-            // 
-            // cmbAmbiente
-            // 
-            this.cmbAmbiente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAmbiente.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAmbiente.FormattingEnabled = true;
-            this.cmbAmbiente.Location = new System.Drawing.Point(6, 259);
-            this.cmbAmbiente.Name = "cmbAmbiente";
-            this.cmbAmbiente.Size = new System.Drawing.Size(257, 26);
-            this.cmbAmbiente.TabIndex = 160;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(6, 242);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(101, 14);
-            this.label22.TabIndex = 161;
-            this.label22.Text = "Ambiente Padrão";
             // 
             // FormNova
             // 
