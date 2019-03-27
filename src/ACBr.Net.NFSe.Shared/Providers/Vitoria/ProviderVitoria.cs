@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace ACBr.Net.NFSe.Providers.Vitoria
 {
-    class ProviderVitoria : ProviderBase
+    public class ProviderVitoria : ProviderBase
     {
         #region Constructors
         public ProviderVitoria(ConfigNFSe config, ACBrMunicipioNFSe municipio) : base(config, municipio)

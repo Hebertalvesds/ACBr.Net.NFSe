@@ -20,6 +20,7 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
         private string ConfigPath;
         private String DataBase;
         private int IdConfig;
+        private FormMain ParentForm;
         #endregion Fields
 
         #region Constructors
@@ -39,10 +40,11 @@ namespace ACBr.Net.NFSe.Demo.Configuracoes
 
         }
 
-        public FormNova(string db, int id = 0) : this()
+        public FormNova(string db, int id = 0, FormMain parent = null) : this()
         {
             DataBase = db;
             IdConfig = id;
+            ParentForm = parent;
 
             if(IdConfig != 0)
             {

@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using Starline.SmartNota.Util;
 using ACBr.Net.NFSe.Demo.Configuracoes;
 using ACbr.Net.Storage;
+using System.ComponentModel;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -68,24 +69,30 @@ namespace ACBr.Net.NFSe.Demo
                 MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
             {
-                while(1 == 1){
-                    this.Log().Info("Lendo Arquivos de: " + UriEnvio);
-                    var url = new UriBuilder(UriEnvio);
-                    var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
-
-                    var root = xml.Root;
-                    acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
-                    if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
-                    else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
-                    else
-                    {
-                        MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
-                        throw new ApplicationException("Processamento Interrompido");
-                    }
-                }
-
+                acbrNFSe.Certificado = acbrNFSe.Configuracoes.Certificados.ObterCertificado();
+                Processamento();
             }
 
+        }
+
+        private void Processamento()
+        {
+            while (1 == 1)
+            {
+                this.Log().Info("Lendo Arquivos de: " + UriEnvio);
+                var url = new UriBuilder(UriEnvio);
+                var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
+
+                var root = xml.Root;
+                acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
+                if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
+                else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
+                else
+                {
+                    MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
+                    throw new ApplicationException("Processamento Interrompido");
+                }
+            }
         }
 
         private void btnConsultarSituacao_Click(object sender, EventArgs e)
@@ -633,26 +640,26 @@ namespace ACBr.Net.NFSe.Demo
             var param = new System.Collections.Specialized.NameValueCollection
             {
                 {"protocolo", protocolo},
-                {"xml", xml}
+                {"xml", xml},
+                {"tipoOperacao", "2"}
             };
 
             try
             {
-                caminho += "?tipoOperacao=2";
+                //caminho += "?tipoOperacao=2";
 
                 var webCliente = new System.Net.WebClient();
                 byte[] bytes_resposta = webCliente.UploadValues(caminho, "POST", param);
                 string resposta = Encoding.ASCII.GetString(bytes_resposta);
-                if (!resposta.IsEmpty() || resposta.ToUpper() != "OK")
+                if (!resposta.IsEmpty() && resposta.ToUpper() != "OK")
                 {
                     this.Log().Error("Erro ao gravar Nota Fiscal: \n" + resposta);
-                    throw new ApplicationException("Erro ao gravar nota Fiscal: " + resposta);
                 }
             }
             catch (System.Net.WebException we)
             {
                 this.Log().Error("WebException: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + we);
-                throw new ApplicationException(
+                this.Log().Error(
                     "Oops!! O tempo limite de conexão ao serviço de notificar o estado dos RPSs no Smart expirou. Por favor, verifique sua internet e tente novamente..." +
                     Environment.NewLine + "Erro: " + we.Message, we
                 );
@@ -660,7 +667,7 @@ namespace ACBr.Net.NFSe.Demo
             catch (Exception e)
             {
                 this.Log().Error("Exception: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + e);
-                throw new ApplicationException(
+                this.Log().Error(
                     "Oops!! Ocorreu algum erro ao tentar conectar ao serviço de notificar o estado dos RPSs no Smart. Por favor, verifique sua internet e tente novamente..." +
                     Environment.NewLine + "Erro: " + e.Message, e
                 );
@@ -681,6 +688,7 @@ namespace ACBr.Net.NFSe.Demo
             {
                 Dictionary<int, string> dicionario = new Dictionary<int, string>();
                 var prestador = db.GetCollection<ACbr.Net.Storage.Models.Prestador>("prestador").FindAll();
+                dicionario.Add(0, "Selecione uma configuração");
                 foreach (var p in prestador)
                 {
                     dicionario.Add(p.Id, p.NomeConfig);
@@ -739,6 +747,27 @@ namespace ACBr.Net.NFSe.Demo
                     UriRetorno = p.XmlProcessaPath;
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Log().Info("Lendo Arquivos de: " + UriEnvio);
+            var url = new UriBuilder(UriEnvio);
+            var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
+            acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
+            EnviarLoteRpsEnvio(xml);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ComboBoxConfiguracoes();
+        }
+
+        private void worker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            BackgroundWorker controleThread = sender as BackgroundWorker;
+
+            Processamento();
         }
     }
 }

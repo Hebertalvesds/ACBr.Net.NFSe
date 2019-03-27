@@ -158,6 +158,11 @@ namespace ACBr.Net.NFSe.Providers
             Municipio = municipio;
         }
 
+        public void SetCertificate(X509Certificate2 cert)
+        {
+            certificado = cert;
+        }
+
         /// <inheritdoc />
         ~ProviderBase()
         {

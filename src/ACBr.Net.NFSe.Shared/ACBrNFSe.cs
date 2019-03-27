@@ -84,6 +84,11 @@ namespace ACBr.Net.NFSe
         [Browsable(false)]
         public NotaFiscalCollection NotasFiscais { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public X509Certificate2 Certificado { get; set; }
+
         #endregion Propriedades
 
         #region Methods
@@ -115,7 +120,7 @@ namespace ACBr.Net.NFSe
                 
                 using (var provider = ProviderManager.GetProvider(Configuracoes))
                 {
-                    
+                    provider.SetCertificate(Certificado);
                     var ret = sincrono
                         ? provider.EnviarSincrono(lote, NotasFiscais)
                         : provider.Enviar(lote, NotasFiscais);
