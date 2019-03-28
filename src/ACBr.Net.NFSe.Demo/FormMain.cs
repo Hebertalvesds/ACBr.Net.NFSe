@@ -18,6 +18,7 @@ using Starline.SmartNota.Util;
 using ACBr.Net.NFSe.Demo.Configuracoes;
 using ACbr.Net.Storage;
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ACBr.Net.NFSe.Demo
 {
@@ -34,6 +35,7 @@ namespace ACBr.Net.NFSe.Demo
         private string pathCidades;
         private string DBName;
         private LiteDB.LiteDatabase DB;
+        private ACBrMunicipioNFSe municipio;
         #endregion Fields
 
         #region Constructors
@@ -61,7 +63,7 @@ namespace ACBr.Net.NFSe.Demo
         private void btnIniciarProc_Click(object sender, EventArgs e)
         {
             lblStatus.Text = "";
-            
+
             //Faz a leitura do arquivo de Envio ou Consulta de Lotes e Decide qual processo irá chamar
             if (UriEnvio.IsEmpty())
                 MessageBox.Show(this, "Caminho do XML de Envio não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -69,7 +71,10 @@ namespace ACBr.Net.NFSe.Demo
                 MessageBox.Show(this, "Caminho do XML de Retorno não pode ser vázio!", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
             {
-                acbrNFSe.Certificado = acbrNFSe.Configuracoes.Certificados.ObterCertificado();
+                acbrNFSe.Certificado = SelectCertificate(GetCertificatesStore());
+                acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
+                municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
+
                 Processamento();
             }
 
@@ -77,22 +82,66 @@ namespace ACBr.Net.NFSe.Demo
 
         private void Processamento()
         {
-            while (1 == 1)
+            this.Log().Info("Lendo Arquivos de: " + UriEnvio);
+            var url = new UriBuilder(UriEnvio);
+            string html = TWeb.FetchRps(url.Uri);
+            btnIniciarProc.Enabled = false;
+
+            do
             {
-                this.Log().Info("Lendo Arquivos de: " + UriEnvio);
-                var url = new UriBuilder(UriEnvio);
-                var xml = XDocument.Parse(TWeb.FetchRps(url.Uri));
+                
+                if (html.IsEmpty())
+                {
+                    this.Log().Info($"Não foram encontrados arquivos de Envio ou Consulta no caminho {UriEnvio}");
+                    btnIniciarProc.Enabled = true;
+                    break;
+                }
+
+                var xml = XDocument.Parse(html);
 
                 var root = xml.Root;
-                acbrNFSe.Configuracoes.WebServices.Ambiente = cmbAmbiente.GetSelectedValue<DFeTipoAmbiente>();
-                if (root.Name.ToString().Contains("EnviarLoteRps")) this.EnviarLoteRpsEnvio(xml);
-                else if (root.Name.ToString().Contains("ConsultarLoteRps")) this.ConsultarLoteRps(xml);
+                if (root.Name.ToString().Contains("EnviarLoteRps"))
+                {
+                    var retorno = EnviarLoteRpsEnvio(xml);
+                    string numeroLote = "";
+                    if (retorno.Sucesso)
+                    {
+                        this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno);
+                        numeroLote = retorno.NumeroLote;
+                        var xmlRetonro = RemoveAllNamespaces(XElement.Parse(retorno.XmlRetorno)).ToString();
+                        ResultadoEnvioLoteRps(numeroLote, xmlRetonro, UriRetorno);
+                    }
+                    else
+                    {
+                        this.Log().Error($"Erro no envio do Lote {numeroLote}");
+                        var xmlRetonro = RemoveAllNamespaces(XElement.Parse(retorno.XmlRetorno)).ToString();
+                        ResultadoEnvioLoteRps(numeroLote, xmlRetonro, UriRetorno);
+                    }
+                }
+                else if (root.Name.ToString().Contains("ConsultarLoteRps"))
+                {
+                    var protocoloConsulta = BuscaNumeroProtocolo(xml);
+                    var retorno = ConsultarLoteRps(xml, protocoloConsulta);
+                    if (retorno.Sucesso)
+                    {
+                        this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
+                        var xmlRetonro = RemoveAllNamespaces(XElement.Parse(retorno.XmlRetorno)).ToString();
+                        ResultadoConsultaLoteRps(protocoloConsulta, xmlRetonro, UriRetorno);
+                    }
+                    else
+                    {
+                        this.Log().Error($"Arquivo de consulta para protocolo {protocoloConsulta} retornou erros.");
+                        var xmlRetonro = RemoveAllNamespaces(XElement.Parse(retorno.XmlRetorno)).ToString();
+                        ResultadoConsultaLoteRps(protocoloConsulta, xmlRetonro, UriRetorno);
+                    }
+                }
                 else
                 {
                     MessageBox.Show("A operação requisita não pode ser processada. Ausência de Elemento EnviarLoteRps ou ConsultarLoteRps");
                     throw new ApplicationException("Processamento Interrompido");
                 }
-            }
+
+            } while (!(html = TWeb.FetchRps(url.Uri)).IsEmpty());
         }
 
         private void btnConsultarSituacao_Click(object sender, EventArgs e)
@@ -259,6 +308,7 @@ namespace ACBr.Net.NFSe.Demo
 
         private void button1_Click(object sender, EventArgs e)
         {
+            acbrNFSe.Certificado = SelectCertificate(GetCertificatesStore());
             var protocolo = "";
             var numero = 0;
             if (InputBox.Show("Numero protocolo", "Digite o numero do protocolo.", ref protocolo).Equals(DialogResult.Cancel)) return;
@@ -412,8 +462,6 @@ namespace ACBr.Net.NFSe.Demo
         private void GerarRps(XDocument xml)
         {
             
-            var municipio = (ACBrMunicipioNFSe)cmbCidades.SelectedItem;
-
             if (municipio == null) return;
 
             acbrNFSe.NotasFiscais.Clear();
@@ -551,52 +599,39 @@ namespace ACBr.Net.NFSe.Demo
             return lote;
         }
 
-        private void EnviarLoteRpsEnvio(XDocument xxml)
+        private RetornoWebservice EnviarLoteRpsEnvio(XDocument xxml)
         {
-            ExecuteSafe(() =>
-            {
-                
-                var numero = int.Parse(BuscaNumeroLote(xxml));
-                if (numero == 0)
-                {
-                    MessageBox.Show("O Número do Lote não foi encontrado!", "Envio cancelado..", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                //if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
-                GerarRps(xxml);
 
-                var ret = acbrNFSe.Enviar(numero);
+            var numero = int.Parse(BuscaNumeroLote(xxml));
+            this.Log().Info($"Enviando lote: {numero}");
+            if (numero == 0)
+            {
+                this.Log().Error("O Número do Lote não foi encontrado!");
+                throw new ApplicationException("");
+            }
+            //if (InputBox.Show("Numero Lote", "Digite o numero do lote.", ref numero).Equals(DialogResult.Cancel)) return;
+            GerarRps(xxml);
+
+            var ret = acbrNFSe.Enviar(numero);
                 
-                if (ret.Sucesso)
-                {
-                    this.Log().Info("Sucesso no processamento! Gravando no repositório de processamento: " + UriRetorno);
-                    var numeroLote = ret.NumeroLote;
-                    var xmlRetonro = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
-                    ResultadoEnvioLoteRps(numeroLote, xmlRetonro, UriRetorno);
-                }
-                wbbDados.LoadXml(ret.XmlEnvio);
-                wbbResposta.LoadXml(ret.XmlRetorno);
-            });
+            wbbDados.LoadXml(ret.XmlEnvio);
+            wbbResposta.LoadXml(ret.XmlRetorno);
+
+            return ret;
         }
 
-        private void ConsultarLoteRps(XDocument xxml)
+        private RetornoWebservice ConsultarLoteRps(XDocument xxml, string protocolo = "")
         {
 
-            var protocolo = BuscaNumeroProtocolo(xxml);
+            protocolo = protocolo ?? BuscaNumeroProtocolo(xxml);
             var numero = 0;
 
-            ExecuteSafe(() =>
-            {
-                var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
-                if (ret.Sucesso)
-                {
-                    this.Log().Info("Sucesso na Consulta! Gravando no repositório de processamento: " + UriRetorno);
-                    var xmlRetonro = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
-                    ResultadoConsultaLoteRps(ret.Protocolo, xmlRetonro, UriRetorno);
-                }
-                wbbDados.LoadXml(ret.XmlEnvio);
-                wbbResposta.LoadXml(ret.XmlRetorno);
-            });
+            var ret = acbrNFSe.ConsultarLoteRps(numero, protocolo);
+
+            //wbbDados.LoadXml(ret.XmlEnvio);
+            //wbbResposta.LoadXml(ret.XmlRetorno);
+
+            return ret;
         }
 
         private void ResultadoEnvioLoteRps(string lote, string xml, string caminho)
@@ -619,18 +654,11 @@ namespace ACBr.Net.NFSe.Demo
             catch (System.Net.WebException we)
             {
                 this.Log().Error("WebException: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + we);
-                throw new ApplicationException(
-                    "Oops!! O tempo limite de conexão ao serviço de notificar o estado dos RPSs no Smart expirou. Por favor, verifique sua internet e tente novamente..." +
-                    Environment.NewLine + "Erro: " + we.Message, we
-                );
             }
             catch (Exception e)
             {
                 this.Log().Error("Exception: Trying to post the rps xml response at URL: '" + caminho + "' - Description: " + e);
-                throw new ApplicationException(
-                    "Oops!! Ocorreu algum erro ao tentar conectar ao serviço de notificar o estado dos RPSs no Smart. Por favor, verifique sua internet e tente novamente..." +
-                    Environment.NewLine + "Erro: " + e.Message, e
-                );
+
             }
 
         }
@@ -700,6 +728,49 @@ namespace ACBr.Net.NFSe.Demo
             }
         }
 
+        private X509Certificate2Collection GetCertificatesStore()
+        {
+            X509Store stores = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            try
+            {
+                stores.Open(OpenFlags.ReadOnly);
+                return stores.Certificates;
+
+            }
+            catch (Exception e)
+            {
+                this.Log().Error($"Falha no procedimento de obtenção da lista de certificados internos. Exception: {e.Message}");
+                throw;
+            }
+            finally
+            {
+                stores.Close();
+            }
+        }
+
+        private X509Certificate2 SelectCertificate(X509Certificate2Collection store)
+        {
+            //Procura o certificado único com base no serial armazenado
+            X509Certificate2 certificadoValido = null;
+
+            X509Certificate2Collection internalSelecteds = store.Find(X509FindType.FindBySerialNumber, acbrNFSe.Configuracoes.Certificados.Certificado, false);
+            //if (internalSelecteds.Count == 1) return internalSelecteds[0];
+            
+            
+            X509Certificate2Collection selecteds = X509Certificate2UI.SelectFromCollection(
+            internalSelecteds,
+            "Certificados",
+            "Selecione um certificado válido",
+            X509SelectionFlag.SingleSelection
+            );
+            foreach (X509Certificate2 cert in selecteds)
+            {
+                if (cert.SerialNumber == acbrNFSe.Configuracoes.Certificados.Certificado)
+                    certificadoValido = cert;
+            }
+            
+            return certificadoValido;
+        }
         #endregion Methods
 
         private void salvarEditarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -724,7 +795,7 @@ namespace ACBr.Net.NFSe.Demo
                     var codMunicipio = p.CodCidade;
                     if (codMunicipio > 0)
                     {
-                        var municipio = ProviderManager.Municipios.SingleOrDefault(x => x.Codigo == codMunicipio);
+                        municipio = ProviderManager.Municipios.SingleOrDefault(x => x.Codigo == codMunicipio);
                         if (municipio != null)
                         {
                             cmbCidades.SelectedItem = municipio;
@@ -738,6 +809,17 @@ namespace ACBr.Net.NFSe.Demo
                             acbrNFSe.Configuracoes.PrestadorPadrao.Endereco.Uf = municipio.UF.ToString();
                         }
                     }
+
+                    switch (p.Ambiente.ToUpper())
+                    {
+                        case "PRODUÇÃO":
+                            cmbAmbiente.SelectedIndex = 0;
+                            break;
+                        default:
+                            cmbAmbiente.SelectedIndex = 1;
+                            break;
+                    }
+
                     txtUf.Text = p.Uf;
                     txtCodSiafi.Text = p.CodSiaf.ToString();
                     txtCertificado.Text = p.CertPxsPath;
@@ -745,6 +827,10 @@ namespace ACBr.Net.NFSe.Demo
                     txtSenha.Text = p.Senha;
                     UriEnvio = p.XmlListaPath;
                     UriRetorno = p.XmlProcessaPath;
+
+                    acbrNFSe.Configuracoes.Certificados.Certificado = p.Serial;
+                    acbrNFSe.Configuracoes.PrestadorPadrao.CpfCnpj = p.CnpjCpf;
+                    acbrNFSe.Configuracoes.PrestadorPadrao.InscricaoMunicipal = p.IM;
                 }
             }
         }
@@ -763,11 +849,5 @@ namespace ACBr.Net.NFSe.Demo
             ComboBoxConfiguracoes();
         }
 
-        private void worker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            BackgroundWorker controleThread = sender as BackgroundWorker;
-
-            Processamento();
-        }
     }
 }

@@ -31,6 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnIniciarProc = new System.Windows.Forms.Button();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
@@ -38,19 +41,20 @@
             this.wbbResposta = new System.Windows.Forms.WebBrowser();
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.wbbNFSe = new System.Windows.Forms.WebBrowser();
-            this.tabPage12 = new System.Windows.Forms.TabPage();
-            this.wbbRetorno = new System.Windows.Forms.WebBrowser();
             this.tabPage13 = new System.Windows.Forms.TabPage();
             this.wbbDados = new System.Windows.Forms.WebBrowser();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.cmbConfiguracoes = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cmbAmbiente = new System.Windows.Forms.ComboBox();
+            this.btnGetCertificate = new System.Windows.Forms.Button();
             this.txtNumeroSerie = new System.Windows.Forms.TextBox();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.txtCertificado = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.btnFindCertificate = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.txtCodSiafi = new System.Windows.Forms.TextBox();
             this.txtCodCidade = new System.Windows.Forms.TextBox();
@@ -82,24 +86,16 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnIniciarProc = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.btnGetCertificate = new System.Windows.Forms.Button();
-            this.btnFindCertificate = new System.Windows.Forms.Button();
             this.configuraçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salvarEditarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferênciasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editarConfiguraçãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.worker = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl3.SuspendLayout();
             this.tabPage10.SuspendLayout();
             this.tabPage9.SuspendLayout();
             this.tabPage11.SuspendLayout();
-            this.tabPage12.SuspendLayout();
             this.tabPage13.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -133,12 +129,68 @@
             this.tabPage1.Text = "NFSe";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.button2.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.external_48px;
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(537, 6);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(139, 39);
+            this.button2.TabIndex = 30;
+            this.button2.Text = "Enviar Lote";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Visible = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
+            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.button1.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.saving_book;
+            this.button1.Location = new System.Drawing.Point(682, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(169, 39);
+            this.button1.TabIndex = 29;
+            this.button1.Text = "Consulta Lote";
+            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnIniciarProc
+            // 
+            this.btnIniciarProc.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnIniciarProc.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnIniciarProc.FlatAppearance.BorderSize = 0;
+            this.btnIniciarProc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIniciarProc.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIniciarProc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnIniciarProc.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.process;
+            this.btnIniciarProc.Location = new System.Drawing.Point(293, 6);
+            this.btnIniciarProc.Name = "btnIniciarProc";
+            this.btnIniciarProc.Size = new System.Drawing.Size(145, 39);
+            this.btnIniciarProc.TabIndex = 12;
+            this.btnIniciarProc.Text = "Processar";
+            this.btnIniciarProc.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnIniciarProc.UseVisualStyleBackColor = false;
+            this.btnIniciarProc.Click += new System.EventHandler(this.btnIniciarProc_Click);
+            // 
             // tabControl3
             // 
             this.tabControl3.Controls.Add(this.tabPage10);
             this.tabControl3.Controls.Add(this.tabPage9);
             this.tabControl3.Controls.Add(this.tabPage11);
-            this.tabControl3.Controls.Add(this.tabPage12);
             this.tabControl3.Controls.Add(this.tabPage13);
             this.tabControl3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl3.Location = new System.Drawing.Point(286, 51);
@@ -213,26 +265,6 @@
             this.wbbNFSe.Size = new System.Drawing.Size(554, 413);
             this.wbbNFSe.TabIndex = 2;
             // 
-            // tabPage12
-            // 
-            this.tabPage12.Controls.Add(this.wbbRetorno);
-            this.tabPage12.Location = new System.Drawing.Point(4, 22);
-            this.tabPage12.Name = "tabPage12";
-            this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage12.Size = new System.Drawing.Size(560, 419);
-            this.tabPage12.TabIndex = 4;
-            this.tabPage12.Text = "Retorno Completo WS";
-            this.tabPage12.UseVisualStyleBackColor = true;
-            // 
-            // wbbRetorno
-            // 
-            this.wbbRetorno.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wbbRetorno.Location = new System.Drawing.Point(3, 3);
-            this.wbbRetorno.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wbbRetorno.Name = "wbbRetorno";
-            this.wbbRetorno.Size = new System.Drawing.Size(554, 413);
-            this.wbbRetorno.TabIndex = 2;
-            // 
             // tabPage13
             // 
             this.tabPage13.Controls.Add(this.wbbDados);
@@ -290,6 +322,20 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Serviço Atual";
             // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button3.BackgroundImage = global::ACBr.Net.NFSe.Demo.Properties.Resources.reload;
+            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Location = new System.Drawing.Point(229, 33);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(34, 26);
+            this.button3.TabIndex = 86;
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // cmbConfiguracoes
             // 
             this.cmbConfiguracoes.Cursor = System.Windows.Forms.Cursors.Default;
@@ -320,6 +366,21 @@
             this.cmbAmbiente.Name = "cmbAmbiente";
             this.cmbAmbiente.Size = new System.Drawing.Size(256, 26);
             this.cmbAmbiente.TabIndex = 83;
+            // 
+            // btnGetCertificate
+            // 
+            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
+            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
+            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetCertificate.ForeColor = System.Drawing.Color.White;
+            this.btnGetCertificate.Location = new System.Drawing.Point(239, 339);
+            this.btnGetCertificate.Name = "btnGetCertificate";
+            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnGetCertificate.TabIndex = 80;
+            this.btnGetCertificate.UseVisualStyleBackColor = false;
             // 
             // txtNumeroSerie
             // 
@@ -370,6 +431,21 @@
             this.label10.Size = new System.Drawing.Size(38, 13);
             this.label10.TabIndex = 79;
             this.label10.Text = "Senha";
+            // 
+            // btnFindCertificate
+            // 
+            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
+            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
+            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
+            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFindCertificate.ForeColor = System.Drawing.Color.White;
+            this.btnFindCertificate.Location = new System.Drawing.Point(239, 253);
+            this.btnFindCertificate.Name = "btnFindCertificate";
+            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
+            this.btnFindCertificate.TabIndex = 75;
+            this.btnFindCertificate.UseVisualStyleBackColor = false;
             // 
             // label9
             // 
@@ -684,105 +760,6 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.button2.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.external_48px;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(537, 6);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(139, 39);
-            this.button2.TabIndex = 30;
-            this.button2.Text = "Enviar Lote";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
-            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.button1.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.saving_book;
-            this.button1.Location = new System.Drawing.Point(682, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(169, 39);
-            this.button1.TabIndex = 29;
-            this.button1.Text = "Consulta Lote";
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // btnIniciarProc
-            // 
-            this.btnIniciarProc.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnIniciarProc.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnIniciarProc.FlatAppearance.BorderSize = 0;
-            this.btnIniciarProc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIniciarProc.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIniciarProc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnIniciarProc.Image = global::ACBr.Net.NFSe.Demo.Properties.Resources.process;
-            this.btnIniciarProc.Location = new System.Drawing.Point(293, 6);
-            this.btnIniciarProc.Name = "btnIniciarProc";
-            this.btnIniciarProc.Size = new System.Drawing.Size(145, 39);
-            this.btnIniciarProc.TabIndex = 12;
-            this.btnIniciarProc.Text = "Processar";
-            this.btnIniciarProc.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnIniciarProc.UseVisualStyleBackColor = false;
-            this.btnIniciarProc.Click += new System.EventHandler(this.btnIniciarProc_Click);
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.button3.BackgroundImage = global::ACBr.Net.NFSe.Demo.Properties.Resources.reload;
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(229, 33);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(34, 26);
-            this.button3.TabIndex = 86;
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // btnGetCertificate
-            // 
-            this.btnGetCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnGetCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGetCertificate.BackgroundImage")));
-            this.btnGetCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnGetCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnGetCertificate.FlatAppearance.BorderSize = 0;
-            this.btnGetCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGetCertificate.ForeColor = System.Drawing.Color.White;
-            this.btnGetCertificate.Location = new System.Drawing.Point(239, 339);
-            this.btnGetCertificate.Name = "btnGetCertificate";
-            this.btnGetCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnGetCertificate.TabIndex = 80;
-            this.btnGetCertificate.UseVisualStyleBackColor = false;
-            // 
-            // btnFindCertificate
-            // 
-            this.btnFindCertificate.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnFindCertificate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindCertificate.BackgroundImage")));
-            this.btnFindCertificate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnFindCertificate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(39)))), ((int)(((byte)(96)))));
-            this.btnFindCertificate.FlatAppearance.BorderSize = 0;
-            this.btnFindCertificate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFindCertificate.ForeColor = System.Drawing.Color.White;
-            this.btnFindCertificate.Location = new System.Drawing.Point(239, 253);
-            this.btnFindCertificate.Name = "btnFindCertificate";
-            this.btnFindCertificate.Size = new System.Drawing.Size(24, 24);
-            this.btnFindCertificate.TabIndex = 75;
-            this.btnFindCertificate.UseVisualStyleBackColor = false;
-            // 
             // configuraçõesToolStripMenuItem
             // 
             this.configuraçõesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -818,10 +795,6 @@
             this.editarConfiguraçãoToolStripMenuItem.Text = "Editar Configuração";
             this.editarConfiguraçãoToolStripMenuItem.Click += new System.EventHandler(this.editarConfiguraçãoToolStripMenuItem_Click);
             // 
-            // worker
-            // 
-            this.worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.worker_DoWork);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -845,7 +818,6 @@
             this.tabPage10.ResumeLayout(false);
             this.tabPage9.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
-            this.tabPage12.ResumeLayout(false);
             this.tabPage13.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -868,7 +840,6 @@
 		private System.Windows.Forms.TabPage tabPage9;
 		private System.Windows.Forms.TabPage tabPage10;
 		private System.Windows.Forms.TabPage tabPage11;
-		private System.Windows.Forms.TabPage tabPage12;
 		private System.Windows.Forms.TabPage tabPage13;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.ListView lstMunicipios;
@@ -883,7 +854,6 @@
 		private System.Windows.Forms.WebBrowser wbbResposta;
 		private System.Windows.Forms.RichTextBox rtbLog;
 		private System.Windows.Forms.WebBrowser wbbNFSe;
-		private System.Windows.Forms.WebBrowser wbbRetorno;
 		private System.Windows.Forms.WebBrowser wbbDados;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel lblStatus;
@@ -924,7 +894,6 @@
         private System.Windows.Forms.ComboBox cmbConfiguracoes;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.ComponentModel.BackgroundWorker worker;
     }
 }
 

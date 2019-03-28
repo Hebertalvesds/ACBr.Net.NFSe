@@ -46,7 +46,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Linq;
 using ACBr.Net.DFe.Core.Document;
-using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ACBr.Net.NFSe.Providers
 {
@@ -156,11 +156,6 @@ namespace ACBr.Net.NFSe.Providers
             FormatoAlerta = "TAG:%TAG% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.";
             Configuracoes = config;
             Municipio = municipio;
-        }
-
-        public void SetCertificate(X509Certificate2 cert)
-        {
-            certificado = cert;
         }
 
         /// <inheritdoc />
@@ -405,7 +400,12 @@ namespace ACBr.Net.NFSe.Providers
             throw new NotImplementedException("Função não implementada/suportada neste Provedor !");
         }
 
-        #endregion Public
+        public void SetCertificate(X509Certificate2 cert)
+        {
+            certificado = cert;
+        }
+
+        #endregion Public       
 
         #region Protected
 
@@ -819,6 +819,11 @@ namespace ACBr.Net.NFSe.Providers
         }
 
         #endregion Protected
+
+        #region Private
+        
+        #endregion
+
 
         #region Dispose
 

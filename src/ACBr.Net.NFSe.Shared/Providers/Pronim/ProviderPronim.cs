@@ -780,7 +780,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             }
         }
 
-        private XDocument AssinarMensagemXML(XDocument mensagemXML, System.Security.Cryptography.X509Certificates.X509Certificate2 certificado)
+        /*private XDocument AssinarMensagemXML(XDocument mensagemXML, System.Security.Cryptography.X509Certificates.X509Certificate2 certificado)
         {
             var xmlDoc = new XmlDocument();
             var key = new System.Security.Cryptography.RSACryptoServiceProvider();
@@ -818,7 +818,7 @@ namespace ACBr.Net.NFSe.Providers.Pronim
             xmlDoc.DocumentElement.AppendChild(xmlDoc.ImportNode(signedDocument.GetXml(), true));
 
             return XDocument.Parse(xmlDoc.OuterXml);
-        }
+        }*/
         #endregion Methods
     }
 }

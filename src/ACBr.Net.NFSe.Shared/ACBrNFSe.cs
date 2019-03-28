@@ -85,7 +85,7 @@ namespace ACBr.Net.NFSe
         public NotaFiscalCollection NotasFiscais { get; private set; }
 
         /// <summary>
-        /// 
+        /// Armazena o certificado da transação atual
         /// </summary>
         public X509Certificate2 Certificado { get; set; }
 
@@ -120,7 +120,7 @@ namespace ACBr.Net.NFSe
                 
                 using (var provider = ProviderManager.GetProvider(Configuracoes))
                 {
-                    provider.SetCertificate(Certificado);
+                    if (provider.Certificado.IsNull()) provider.SetCertificate(Certificado);
                     var ret = sincrono
                         ? provider.EnviarSincrono(lote, NotasFiscais)
                         : provider.Enviar(lote, NotasFiscais);
