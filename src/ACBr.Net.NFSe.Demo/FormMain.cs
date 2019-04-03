@@ -322,6 +322,12 @@ namespace ACBr.Net.NFSe.Demo
                 var xmlEnvio = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
                 ResultadoConsultaLoteRps(protocolo, xmlEnvio, UriRetorno);
             }
+            else if(ret.XmlRetorno != "")
+            {
+                this.Log().Info("XML de consulta retornou Erros ou Avisos!");
+                var xmlEnvio = RemoveAllNamespaces(XElement.Parse(ret.XmlRetorno)).ToString();
+                ResultadoConsultaLoteRps(protocolo, xmlEnvio, UriRetorno);
+            }
             wbbDados.LoadXml(ret.XmlEnvio);
             wbbResposta.LoadXml(ret.XmlRetorno);
         }
@@ -669,7 +675,7 @@ namespace ACBr.Net.NFSe.Demo
             {
                 {"protocolo", protocolo},
                 {"xml", xml},
-                {"tipoOperacao", "2"}
+                {"tipoOperacao","2"}
             };
 
             try
